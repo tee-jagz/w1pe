@@ -1,6 +1,7 @@
 import psycopg
 from config import settings
 
+# Connection to the database
 def connect():
     return psycopg.connect(
         dbname=settings.database_name,
@@ -10,7 +11,7 @@ def connect():
         port=settings.database_port
     )
 
-# Connection decorator
+# Connection decorator to connect to the database
 def connection(func):
     def wrapper(*args, **kwargs):
         conn = connect()
@@ -21,7 +22,7 @@ def connection(func):
         return result
     return wrapper
 
-# Create text table if it does not exist
+# Create tables in database if they do not exist
 @connection
 def create_tables(cur):
     cur.execute("""
@@ -82,9 +83,9 @@ def create_tables(cur):
             ,FOREIGN KEY (text_id) REFERENCES text(id) ON DELETE CASCADE
             ,FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE);
                 
-        
-    """)
+     """)
     return True
+
 
 # Add text to the database
 @connection
@@ -93,6 +94,7 @@ def add_text(cur, title, content, owner_id):
                 (title, content, owner_id))
     return True
     
+
 # Add user to the database
 @connection
 def add_user(cur, first_name, last_name, email, phone, username, password, role_id):
@@ -100,11 +102,13 @@ def add_user(cur, first_name, last_name, email, phone, username, password, role_
                 (first_name, last_name, email, phone, username, password, role_id))
     return True
 
+
 # Add role to the database
 @connection
 def add_role(cur, name):
     cur.execute("INSERT INTO roles(name) VALUES(%s)", (name,))
     return True
+
 
 # Add post to the database
 @connection
@@ -113,12 +117,14 @@ def add_post(cur, content, platform_id, owner_id):
                 (content, platform_id, owner_id))
     return True
 
+
 # Add text post map to the database
 @connection
 def add_text_post_map(cur, text_id, post_id):
     cur.execute("INSERT INTO text_post_map(text_id, post_id) VALUES(%s, %s)",
                 (text_id, post_id))
     return True
+
 
 # Add platform to the database
 @connection
@@ -127,11 +133,13 @@ def add_platform(cur, name, character_limit, no_of_posts, hashtag_usage, mention
                 (name, character_limit, no_of_posts, hashtag_usage, mention_usage, emoji_usage))
     return True
 
+
 # Get text from the database
 @connection
 def get_text(cur, id):
     cur.execute("SELECT * FROM text WHERE id=%s", (id,))
     return cur.fetchone()
+
 
 # Get user from the database
 @connection
@@ -139,11 +147,13 @@ def get_user(cur, id):
     cur.execute("SELECT * FROM users WHERE id=%s", (id,))
     return cur.fetchone()
 
+
 # Get role from the database
 @connection
 def get_role(cur, id):
     cur.execute("SELECT * FROM roles WHERE id=%s", (id,))
     return cur.fetchone()
+
 
 # Get post from the database
 @connection

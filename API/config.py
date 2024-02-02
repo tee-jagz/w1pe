@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
+# Initialize the settings class with the environment variables
 class Settings(BaseSettings):
     openai_api_key:str
     database_name: str

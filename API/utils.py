@@ -37,6 +37,3 @@ def get_platforms_config() -> str:
 
 def clear_platforms_config() -> None:
     platforms_config.clear()
-
-
-# if __name__ == "__main__":
