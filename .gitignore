@@ -1,0 +1,8 @@
+/API/venv
+/API/.env
+/API/__pycache__
+/API/test*.py
+/API/test.ipynb
+/API/assistant.py
+/API/db_dummy_data.py
+/API/instruction.py
