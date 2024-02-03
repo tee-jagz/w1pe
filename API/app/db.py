@@ -1,14 +1,17 @@
-import psycopg
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from .config import settings
+from .utils import hash_password
 
 # Connection to the database
 def connect():
-    return psycopg.connect(
+    return psycopg2.connect(
         dbname=settings.database_name,
         user=settings.database_user,
         password=settings.database_password,
         host=settings.database_host,
-        port=settings.database_port
+        port=settings.database_port,
+        cursor_factory=RealDictCursor
     )
 
 # Connection decorator to connect to the database
@@ -98,6 +101,7 @@ def add_text(cur, title, content, owner_id):
 # Add user to the database
 @connection
 def add_user(cur, first_name, last_name, email, phone, username, password, role_id):
+    password = hash_password(password)
     cur.execute("INSERT INTO users(first_name, last_name, email, phone, username, password, role_id) VALUES(%s, %s, %s, %s, %s, %s, %s)",
                 (first_name, last_name, email, phone, username, password, role_id))
     return True
@@ -145,6 +149,13 @@ def get_text(cur, id):
 @connection
 def get_user(cur, id):
     cur.execute("SELECT * FROM users WHERE id=%s", (id,))
+    return cur.fetchone()
+
+
+# Get user by email from the database
+@connection
+def get_user_by_email(cur, email):
+    cur.execute("SELECT * FROM users WHERE email=%s", (email,))
     return cur.fetchone()
 
 

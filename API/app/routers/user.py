@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException
-from ..db import get_user
-from ..models import User
+from fastapi import APIRouter, HTTPException, status
+from ..db import get_user, add_user, get_user_by_email
+from ..schemas import User, UserCreate
 
 router = APIRouter(
     prefix="/users",
@@ -8,13 +8,19 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=User, status_code=200)
-def get_user():
-    try:
-        user = get_user(1)
-        print(user)
-        return user
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=404, detail="User not found")
+@router.get("/{id}", response_model=User, status_code=status.HTTP_200_OK)
+def read_user(id: int):
+    user = get_user(id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
+    
+    return user
+
+@router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
+def create_user(user: UserCreate):
+    add_user(user.first_name, user.last_name, user.email, user.phone, user.username, user.password, user.role_id)
+    new_user = get_user_by_email(user.email)
+    if not new_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
+    return new_user
     

@@ -4,6 +4,6 @@
 /API/test*.py
 /API/test.ipynb
 /API/assistant.py
-/API/db_dummy_data.py
-/API/instruction.py
+*db_dummy_data.py
+*instruction.py
 *.pyc

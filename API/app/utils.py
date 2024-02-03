@@ -1,8 +1,16 @@
 from openai import OpenAI
 import json
-from ..instruction import instruction
+from .instruction import instruction
 from .config import settings
-from .db import get_user
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+# Hass password
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
 
 client = OpenAI(api_key=settings.openai_api_key)
 
