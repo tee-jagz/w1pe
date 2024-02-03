@@ -51,10 +51,23 @@ class RoleCreate(RoleBase):
 class RoleOut(RoleBase):
     id: int
 
-class Post(BaseModel):
+class PostBase(BaseModel):
+    id: int
     content: str
     platform_id: int
+    text_id: int
     owner_id: int
+
+
+class PostCreate(BaseModel):
+    content: str
+    platform_id: int
+    text_id: int
+    owner_id: int
+
+
+class PostOut(PostBase):
+    pass
 
 
 class TextBase(BaseModel):

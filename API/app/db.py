@@ -75,17 +75,11 @@ def create_tables(cur):
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ,posted BOOLEAN DEFAULT FALSE
             ,platform_id INT NOT NULL
+            ,text_id INT NOT NULL
             ,owner_id INT NOT NULL
             ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
-            ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE);
-                
-        CREATE TABLE IF NOT EXISTS text_post_map(
-            id SERIAL PRIMARY KEY
-            ,text_id INT NOT NULL UNIQUE
-            ,post_id INT NOT NULL UNIQUE
-            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE
-            ,FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE);
-                
+            ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE);                
      """)
     return True
 
