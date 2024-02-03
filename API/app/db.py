@@ -1,5 +1,5 @@
 import psycopg
-from config import settings
+from .config import settings
 
 # Connection to the database
 def connect():
@@ -27,13 +27,13 @@ def connection(func):
 def create_tables(cur):
     cur.execute("""
         CREATE TABLE IF NOT EXISTS roles(
-            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START 1 INCREMENT 1)
+            id SERIAL PRIMARY KEY
             ,name TEXT NOT NULL UNIQUE
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
                 
 
         CREATE TABLE IF NOT EXISTS users(
-            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START 1 INCREMENT 1)
+            id SERIAL PRIMARY KEY
             ,first_name TEXT NOT NULL
             ,last_name TEXT NOT NULL
             ,email TEXT NOT NULL UNIQUE
@@ -45,8 +45,8 @@ def create_tables(cur):
             ,FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL);
                 
 
-        CREATE TABLE IF NOT EXISTS text(
-            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START 1 INCREMENT 1)
+        CREATE TABLE IF NOT EXISTS texts(
+            id SERIAL PRIMARY KEY
             ,title TEXT
             ,content TEXT NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -55,8 +55,8 @@ def create_tables(cur):
             ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE);
                 
         
-        CREATE TABLE IF NOT EXISTS platform(
-            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START 1 INCREMENT 1)
+        CREATE TABLE IF NOT EXISTS platforms(
+            id SERIAL PRIMARY KEY
             ,name TEXT NOT NULL
             ,character_limit INT NOT NULL
             ,no_of_posts INT NOT NULL
@@ -67,20 +67,20 @@ def create_tables(cur):
                 
                 
         CREATE TABLE IF NOT EXISTS posts(
-            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START 1 INCREMENT 1)
+            id SERIAL PRIMARY KEY
             ,content TEXT NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ,posted BOOLEAN DEFAULT FALSE
             ,platform_id INT NOT NULL
             ,owner_id INT NOT NULL
-            ,FOREIGN KEY (platform_id) REFERENCES platform(id) ON DELETE CASCADE
+            ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
             ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE);
                 
         CREATE TABLE IF NOT EXISTS text_post_map(
-            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY(START 1 INCREMENT 1)
+            id SERIAL PRIMARY KEY
             ,text_id INT NOT NULL UNIQUE
             ,post_id INT NOT NULL UNIQUE
-            ,FOREIGN KEY (text_id) REFERENCES text(id) ON DELETE CASCADE
+            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE
             ,FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE);
                 
      """)

@@ -1,11 +1,13 @@
 from openai import OpenAI
 import json
-from instruction import instruction
-from config import settings
+from ..instruction import instruction
+from .config import settings
+from .db import get_user
 
 client = OpenAI(api_key=settings.openai_api_key)
 
 platforms_config = []
+
 
 
 def generate_social_media_posts(text: str, platforms_config: str) -> {str: [str]}:

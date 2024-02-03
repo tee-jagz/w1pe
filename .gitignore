@@ -6,3 +6,4 @@
 /API/assistant.py
 /API/db_dummy_data.py
 /API/instruction.py
+*.pyc
