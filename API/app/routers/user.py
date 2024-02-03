@@ -13,8 +13,8 @@ def read_user(id: int):
     user = get_user(id)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
-    
     return user
+
 
 @router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate):

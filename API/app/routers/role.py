@@ -12,8 +12,8 @@ def read_role(id: int):
     role = get_role(id)
     if not role:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Role with id {id} not found")
-    
     return role
+
 
 @router.post("/", response_model=RoleOut, status_code=status.HTTP_201_CREATED)
 def create_role(role: RoleCreate):

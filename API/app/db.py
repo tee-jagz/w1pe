@@ -92,9 +92,9 @@ def create_tables(cur):
 
 # Add text to the database
 @connection
-def add_text(cur, title, content, owner_id):
-    cur.execute("INSERT INTO text(title, content, owner_id) VALUES(%s, %s, %s)",
-                (title, content, owner_id))
+def add_text(cur, title, content, owner_id, posted):
+    cur.execute("INSERT INTO texts(title, content, owner_id, posted) VALUES(%s, %s, %s, %s)",
+                (title, content, owner_id, posted))
     return True
     
 
@@ -141,7 +141,14 @@ def add_platform(cur, name, character_limit, no_of_posts, hashtag_usage, mention
 # Get text from the database
 @connection
 def get_text(cur, id):
-    cur.execute("SELECT * FROM text WHERE id=%s", (id,))
+    cur.execute("SELECT * FROM texts WHERE id=%s", (id,))
+    return cur.fetchone()
+
+
+# Get latest text of the user from the database
+@connection
+def get_latest_text_of_user(cur, owner_id):
+    cur.execute("SELECT * FROM texts WHERE owner_id=%s ORDER BY created_at DESC LIMIT 1", (owner_id,))
     return cur.fetchone()
 
 

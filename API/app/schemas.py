@@ -57,10 +57,23 @@ class Post(BaseModel):
     owner_id: int
 
 
-class Text(BaseModel):
-    title: str = None
+class TextBase(BaseModel):
+    id: int
+    title: Optional[str]
     content: str
     owner_id: int
+    posted: bool
+
+
+class TextCreate(BaseModel):
+    title: Optional[str]
+    content: str
+    owner_id: int
+    posted: bool = False
+
+
+class TextOut(TextBase):
+    pass
 
 
 class Platform(BaseModel):
