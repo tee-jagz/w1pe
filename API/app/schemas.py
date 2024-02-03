@@ -40,9 +40,16 @@ class User(UserBase):
     phone: str
 
 
-class Role(BaseModel):
+class RoleBase(BaseModel):
     name: str
 
+
+class RoleCreate(RoleBase):
+    pass
+
+
+class RoleOut(RoleBase):
+    id: int
 
 class Post(BaseModel):
     content: str

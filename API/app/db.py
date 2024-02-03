@@ -53,7 +53,7 @@ def create_tables(cur):
             ,title TEXT
             ,content TEXT NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            ,poseted BOOLEAN DEFAULT FALSE
+            ,posted BOOLEAN DEFAULT FALSE
             ,owner_id INT NOT NULL
             ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE);
                 
@@ -165,6 +165,12 @@ def get_role(cur, id):
     cur.execute("SELECT * FROM roles WHERE id=%s", (id,))
     return cur.fetchone()
 
+
+# Get role by name from the database
+@connection
+def get_role_by_name(cur, name):
+    cur.execute("SELECT * FROM roles WHERE name=%s", (name,))
+    return cur.fetchone()
 
 # Get post from the database
 @connection

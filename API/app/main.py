@@ -1,10 +1,13 @@
 from fastapi import FastAPI, APIRouter
-from .routers import user
+from .db import create_tables
+from .routers import user, role
 
+# create_tables()
 
 app = FastAPI()
 
 app.include_router(user.router)
+app.include_router(role.router)
 
 
 @app.get("/")
