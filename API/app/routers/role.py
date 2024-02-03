@@ -1,11 +1,20 @@
 from fastapi import APIRouter, HTTPException, status
-from ..db import get_role, add_role, get_role_by_name
+from ..db import get_role, get_roles, add_role, get_role_by_name
 from ..schemas import RoleOut, RoleCreate
 
 router = APIRouter(
     prefix="/roles",
     tags=["Roles"]
 )
+
+
+@router.get("/", response_model=list[RoleOut], status_code=status.HTTP_200_OK)
+def read_roles(skip: int = 0, limit: int = 10):
+    roles = get_roles(skip, limit)
+    if not roles:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No roles found")
+    return roles
+
 
 @router.get("/{id}", response_model=RoleOut, status_code=status.HTTP_200_OK)
 def read_role(id: int):

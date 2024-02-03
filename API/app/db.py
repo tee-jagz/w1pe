@@ -110,9 +110,9 @@ def add_role(cur, name):
 
 # Add post to the database
 @connection
-def add_post(cur, content, platform_id, owner_id):
-    cur.execute("INSERT INTO posts(content, platform_id, owner_id) VALUES(%s, %s, %s)",
-                (content, platform_id, owner_id))
+def add_post(cur, content, platform_id, text_id, owner_id):
+    cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id) VALUES(%s, %s, %s, %s)",
+                (content, platform_id, text_id, owner_id))
     return True
 
 
@@ -139,6 +139,16 @@ def get_text(cur, id):
     return cur.fetchone()
 
 
+# Get all texts from the database
+@connection
+def get_texts(cur, skip, limit, owner_id):
+    if owner_id:
+        cur.execute("SELECT * FROM texts WHERE owner_id=%s LIMIT %s OFFSET %s", (owner_id, limit, skip))
+    else:
+        cur.execute("SELECT * FROM texts LIMIT %s OFFSET %s", (limit, skip))
+    return cur.fetchall()
+
+
 # Get latest text of the user from the database
 @connection
 def get_latest_text_of_user(cur, owner_id):
@@ -146,11 +156,26 @@ def get_latest_text_of_user(cur, owner_id):
     return cur.fetchone()
 
 
+# Get all texts of a user from the database
+@connection
+def get_texts_of_user(cur, owner_id):
+    cur.execute("SELECT * FROM texts WHERE owner_id=%s", (owner_id,))
+    return cur.fetchall()
+
+
 # Get user from the database
 @connection
 def get_user(cur, id):
     cur.execute("SELECT * FROM users WHERE id=%s", (id,))
     return cur.fetchone()
+
+
+
+# Get all users from the database
+@connection
+def get_users(cur, skip, limit):
+    cur.execute("SELECT * FROM users LIMIT %s OFFSET %s", (limit, skip))
+    return cur.fetchall()
 
 
 # Get user by email from the database
@@ -167,6 +192,13 @@ def get_role(cur, id):
     return cur.fetchone()
 
 
+# Get all roles from the database
+@connection
+def get_roles(cur, skip, limit):
+    cur.execute("SELECT * FROM roles LIMIT %s OFFSET %s", (limit, skip))
+    return cur.fetchall()
+
+
 # Get role by name from the database
 @connection
 def get_role_by_name(cur, name):
@@ -178,3 +210,28 @@ def get_role_by_name(cur, name):
 def get_post(cur, id):
     cur.execute("SELECT * FROM posts WHERE id=%s", (id,))
     return cur.fetchone()
+
+
+# Get posts by text_id or owner_id from the database
+@connection
+def get_posts(cur, skip, limit, text_id, owner_id):
+    if text_id or owner_id:
+        cur.execute("SELECT * FROM posts WHERE text_id=%s OR owner_id=%s ORDER BY created_at DESC LIMIT %s OFFSET %s", 
+                (text_id, owner_id, limit, skip))
+    else:
+        cur.execute("SELECT * FROM posts LIMIT %s OFFSET %s", (limit, skip))
+    return cur.fetchall()
+
+
+# # Get all posts of a text from the database
+# @connection
+# def get_posts_of_text(cur, text_id):
+#     cur.execute("SELECT * FROM posts WHERE text_id=%s", (text_id,))
+#     return cur.fetchall()
+
+
+# # Get all posts of a user from the database
+# @connection
+# def get_posts_of_user(cur, owner_id):
+#     cur.execute("SELECT * FROM posts WHERE owner_id=%s", (owner_id,))
+#     return cur.fetchall()

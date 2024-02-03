@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
-from ..db import get_user, add_user, get_user_by_email
+from ..db import get_user, get_users, add_user, get_user_by_email
 from ..schemas import User, UserCreate
+from typing import List, Optional
 
 router = APIRouter(
     prefix="/users",
@@ -14,6 +15,15 @@ def read_user(id: int):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
     return user
+
+
+@router.get("/", response_model=List[User], status_code=status.HTTP_200_OK)
+def read_users(skip: int = 0, limit: int = 10):
+    users = get_users(skip, limit)
+    if not users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No users found")
+    return users
+
 
 
 @router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
