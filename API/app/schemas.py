@@ -7,6 +7,7 @@ class UserBase(BaseModel):
     username: str
     role_id: int
 
+
 class UserCreate(BaseModel):
     first_name: str
     last_name: str
@@ -16,12 +17,12 @@ class UserCreate(BaseModel):
     phone: str
     role_id: Optional[int]
 
+
 class User(UserBase):
     first_name: str
     last_name: str
     email: EmailStr
     phone: str
-
 
 
 class Role(BaseModel):
