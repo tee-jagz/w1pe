@@ -96,3 +96,8 @@ class PlatformConfigBase(BaseModel):
     hashtag_usage: bool = False
     mention_usage: bool = False
     emoji_usage: bool = False
+
+
+class LoginForm(BaseModel):
+    email: EmailStr
+    password: str
