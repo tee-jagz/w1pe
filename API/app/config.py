@@ -11,5 +11,8 @@ class Settings(BaseSettings):
     database_password: str
     database_host: str
     database_port: int
+    secret_key: str
+    algorithm: str
+    access_token_expire_minutes: int
 
 settings = Settings()

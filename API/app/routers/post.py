@@ -28,16 +28,10 @@ def read_posts(skip: int = 0, limit: int = 10, text_id: Optional[int] = None, ow
 
 @router.post("/", response_model=List[PostOut], status_code=status.HTTP_201_CREATED)
 def create_posts(text_id: int, owner_id: int):
-
-    posts = generate_social_media_posts(text_id=text_id)
-    print(posts)
-    # posts = [PostCreate(**post) for post in posts]
-    
     try:
-        # add_post(post.content, post.platform_id, post.text_id, post.owner_id)
+        posts = generate_social_media_posts(text_id=text_id)
         add_posts(posts, text_id, owner_id)
     except Exception as e:
-        print
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     new_post = get_posts(0, 10, text_id, owner_id)
     if not new_post:
