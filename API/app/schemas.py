@@ -89,10 +89,10 @@ class TextOut(TextBase):
     pass
 
 
-class Platform(BaseModel):
+class PlatformConfigBase(BaseModel):
     name: str
     character_limit: int
-    no_of_posts: int
-    hashtag_usage: bool
-    mention_usage: bool
-    emoji_usage: bool
+    no_of_posts: int = 2
+    hashtag_usage: bool = False
+    mention_usage: bool = False
+    emoji_usage: bool = False

@@ -116,6 +116,16 @@ def add_post(cur, content, platform_id, text_id, owner_id):
     return True
 
 
+# Add multiple posts to the database
+@connection
+def add_posts(cur, posts, text_id, owner_id):
+    for platform, posts in posts.items():
+        for post in posts:
+            cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id) VALUES(%s, %s, %s, %s)",
+                        (post, 1, text_id, owner_id))
+    return True
+
+
 # Add text post map to the database
 @connection
 def add_text_post_map(cur, text_id, post_id):
@@ -216,7 +226,7 @@ def get_post(cur, id):
 @connection
 def get_posts(cur, skip, limit, text_id, owner_id):
     if text_id or owner_id:
-        cur.execute("SELECT * FROM posts WHERE text_id=%s OR owner_id=%s ORDER BY created_at DESC LIMIT %s OFFSET %s", 
+        cur.execute("SELECT * FROM posts WHERE text_id=%s AND owner_id=%s ORDER BY created_at DESC LIMIT %s OFFSET %s", 
                 (text_id, owner_id, limit, skip))
     else:
         cur.execute("SELECT * FROM posts LIMIT %s OFFSET %s", (limit, skip))

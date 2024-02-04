@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
-from ..db import add_post, get_post, get_posts
+from ..db import add_post, add_posts, get_post, get_posts
+from ..generator import generate_social_media_posts
 from ..schemas import PostOut, PostCreate
 from typing import List, Optional
 
@@ -25,16 +26,26 @@ def read_posts(skip: int = 0, limit: int = 10, text_id: Optional[int] = None, ow
     return posts
 
 
-@router.post("/", response_model=PostOut, status_code=status.HTTP_201_CREATED)
-def create_post(post: PostCreate):
+@router.post("/", response_model=List[PostOut], status_code=status.HTTP_201_CREATED)
+def create_posts(text_id: int, owner_id: int):
+
+    posts = generate_social_media_posts(text_id=text_id)
+    print(posts)
+    # posts = [PostCreate(**post) for post in posts]
+    
     try:
-        add_post(post.content, post.platform_id, post.text_id, post.owner_id)
+        # add_post(post.content, post.platform_id, post.text_id, post.owner_id)
+        add_posts(posts, text_id, owner_id)
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    new_post = get_posts(0, 1, post.text_id, post.owner_id)[0]
+        print
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    new_post = get_posts(0, 10, text_id, owner_id)
     if not new_post:
-        raise HTTPException(status_code=404, detail=f"Post creation failed")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Post creation failed")
     return new_post
+
+
+
 
 
 # @router.get("/text/{id}", response_model=List[PostOut], status_code=status.HTTP_200_OK)
