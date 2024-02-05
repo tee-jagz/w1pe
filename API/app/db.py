@@ -242,3 +242,47 @@ def get_posts(cur, skip, limit, text_id, owner_id):
     else:
         cur.execute("SELECT * FROM posts LIMIT %s OFFSET %s", (limit, skip))
     return cur.fetchall()
+
+
+# Delete text from the database
+@session
+def delete_text(cur, id):
+    cur.execute("DELETE FROM texts WHERE id=%s", (id,))
+    return True
+
+
+# Delete user from the database
+@session
+def delete_user(cur, id):
+    cur.execute("DELETE FROM users WHERE id=%s", (id,))
+    return True
+
+
+# Delete post from the database
+@session
+def delete_post(cur, id):
+    cur.execute("DELETE FROM posts WHERE id=%s", (id,))
+    return True
+
+
+# Update text in the database
+@session
+def update_text(cur, id, title, content, posted):
+    cur.execute("UPDATE texts SET title=%s, content=%s, posted=%s WHERE id=%s", (title, content, posted, id))
+    return True
+
+
+# Update user in the database
+@session
+def update_user(cur, id, first_name, last_name, email, phone, username, password, role_id):
+    password = hash_password(password)
+    cur.execute("UPDATE users SET first_name=%s, last_name=%s, email=%s, phone=%s, username=%s, password=%s, role_id=%s WHERE id=%s",
+                (first_name, last_name, email, phone, username, password, role_id, id))
+    return True
+
+
+# Update post in the database
+@session
+def update_post(cur, id, content, posted):
+    cur.execute("UPDATE posts SET content=%s, posted=%s WHERE id=%s", (content, posted, id))
+    return True

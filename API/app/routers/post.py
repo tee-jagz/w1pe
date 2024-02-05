@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..db import add_post, add_posts, get_post, get_posts
+from ..db import add_post, add_posts, get_post, get_posts, delete_post, update_post
 from ..generator import generate_social_media_posts
 from ..schemas import PostOut, PostCreate
 from typing import List, Optional
@@ -40,20 +40,17 @@ def create_posts(text_id: int, owner_id: int = Depends(get_current_user)):
     return new_post
 
 
+@router.delete("/{id}", response_model=PostOut, status_code=status.HTTP_200_OK)
+def remove_post(id: int):
+    post = delete_post(id)
+    if not post:
+        raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
+    return post
 
 
-
-# @router.get("/text/{id}", response_model=List[PostOut], status_code=status.HTTP_200_OK)
-# def read_posts_of_text(id: int):
-#     posts = get_posts_of_text(id)
-#     if not posts:
-#         raise HTTPException(status_code=404, detail=f"No posts found for text with id {id}")
-#     return posts
-
-
-# @router.get("/user/{id}", response_model=List[PostOut], status_code=status.HTTP_200_OK)
-# def read_posts_of_user(id: int):
-#     posts = get_posts_of_user(id)
-#     if not posts:
-#         raise HTTPException(status_code=404, detail=f"No posts found for user with id {id}")
-#     return posts
+@router.put("/{id}", response_model=PostOut, status_code=status.HTTP_200_OK)
+def change_post(id: int, post: PostCreate):
+    post = update_post(id, post.title, post.content, post.text_id, post.owner_id)
+    if not post:
+        raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
+    return post

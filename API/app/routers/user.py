@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..db import get_user, get_users, add_user, get_user_by_email
+from ..db import get_user, get_users, add_user, get_user_by_email, delete_user, update_user
 from ..schemas import User, UserCreate
 from typing import List, Optional
 from ..oauth2 import get_current_user
@@ -37,4 +37,19 @@ def create_user(user: UserCreate):
     if not new_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User creation failed")
     return new_user
-    
+
+
+@router.delete("/{id}", response_model=User, status_code=status.HTTP_200_OK)
+def remove_user(id: int):
+    user = delete_user(id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
+    return user
+
+
+@router.put("/{id}", response_model=User, status_code=status.HTTP_200_OK)
+def change_user(id: int, user: UserCreate):
+    user = update_user(id, user.first_name, user.last_name, user.email, user.phone, user.username, user.password, user.role_id)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
+    return user

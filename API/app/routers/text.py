@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from ..db import get_text, get_texts, add_text, get_latest_text_of_user
+from ..db import get_text, get_texts, add_text, get_latest_text_of_user, delete_text, update_text
 from ..schemas import TextOut, TextCreate
 
 router = APIRouter(
@@ -34,3 +34,19 @@ def create_text(text: TextCreate):
     if not new_text:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Text creation failed")
     return new_text
+
+
+@router.delete("/{id}", response_model=TextOut, status_code=status.HTTP_200_OK)
+def remove_text(id: int):
+    text = delete_text(id)
+    if not text:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Text with id {id} not found")
+    return text
+
+
+@router.put("/{id}", response_model=TextOut, status_code=status.HTTP_200_OK)
+def change_text(id: int, text: TextCreate):
+    text = update_text(id, text.title, text.content, text.owner_id, text.posted)
+    if not text:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Text with id {id} not found")
+    return text
