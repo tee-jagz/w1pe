@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from ..db import add_post, add_posts, get_post, get_posts
 from ..generator import generate_social_media_posts
 from ..schemas import PostOut, PostCreate
 from typing import List, Optional
+from ..oauth2 import get_current_user
 
 router = APIRouter(
     prefix="/posts",
@@ -27,7 +28,7 @@ def read_posts(skip: int = 0, limit: int = 10, text_id: Optional[int] = None, ow
 
 
 @router.post("/", response_model=List[PostOut], status_code=status.HTTP_201_CREATED)
-def create_posts(text_id: int, owner_id: int):
+def create_posts(text_id: int, owner_id: int = Depends(get_current_user)):
     try:
         posts = generate_social_media_posts(text_id=text_id)
         add_posts(posts, text_id, owner_id)

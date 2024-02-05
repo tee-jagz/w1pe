@@ -101,3 +101,7 @@ class PlatformConfigBase(BaseModel):
 class LoginForm(BaseModel):
     email: EmailStr
     password: str
+
+
+class TokenData(BaseModel):
+    user_id: int
