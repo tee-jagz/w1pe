@@ -14,6 +14,6 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
-    model_name: str
+    oai_model_name: str
 
 settings = Settings()
