@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from ..utils import verify_password
-from ..db import get_user_by_email
+from ..database.user_queries import get_user_by_email
 from ..oauth2 import create_access_token
 from ..schemas import TokenData
 

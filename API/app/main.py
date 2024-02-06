@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter
-from .db import create_tables
+from .database.db import create_tables
 from .routers import user, role, text, post, auth
 
 # create_tables()

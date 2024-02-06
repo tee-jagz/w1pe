@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..db import get_text, get_texts, add_text, get_latest_text_of_user, delete_text, update_text
+from ..database.text_queries import get_text, get_texts, add_text, get_latest_text_of_user, delete_text, update_text
 from ..schemas import TextOut, TextCreate, TokenData
 from ..oauth2 import get_current_user
 

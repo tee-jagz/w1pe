@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..db import add_post, add_posts, get_post, get_posts, delete_post, update_post
+from ..database.post_queries import add_post, add_posts, get_post, get_posts, delete_post, update_post
 from ..generator import generate_social_media_posts
 from ..schemas import PostOut, PostCreate, PlatformConfigBase
 from typing import List, Optional

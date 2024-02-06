@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from ..db import get_role, get_roles, add_role, get_role_by_name
+from ..database.role_queries import get_role, get_roles, add_role, get_role_by_name
 from ..schemas import RoleOut, RoleCreate
 
 router = APIRouter(

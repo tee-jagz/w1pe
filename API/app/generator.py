@@ -1,5 +1,4 @@
-
-from .db import get_text
+from .database.text_queries import get_text
 from .platform_config import default_platform_configs
 from .schemas import PlatformConfigBase
 from typing import List

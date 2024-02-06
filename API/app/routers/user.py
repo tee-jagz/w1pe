@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..db import get_user, get_users, add_user, get_user_by_email, delete_user, update_user
+from ..database.user_queries import get_user, get_users, add_user, get_user_by_email, delete_user, update_user
 from ..schemas import User, UserCreate
 from typing import List, Optional
 from ..oauth2 import get_current_user
