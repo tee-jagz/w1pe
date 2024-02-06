@@ -1,4 +1,6 @@
 from passlib.context import CryptContext
+from typing import List
+from .schemas import PlatformConfigBase
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -12,3 +14,7 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+
+# Calculate sum of platform posts from list of platform configuration objects
+def sum_of_platform_posts(platforms: List[PlatformConfigBase]) -> int:
+    return sum([platform.no_of_posts for platform in platforms])

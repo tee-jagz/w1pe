@@ -14,7 +14,7 @@ client = OpenAI(api_key=settings.openai_api_key)
 def generate_social_media_posts(text_id: int, platforms_config: List[PlatformConfigBase] = default_platform_configs) :
     text = get_text(text_id)
     text = text["content"]
-    user_input = f'"text": {text}\n"platforms": {platforms_config}'
+    user_input = f'"text": {text}\n"platform_configuratons": {platforms_config}'
     completion = client.chat.completions.create(
         messages=[
             {

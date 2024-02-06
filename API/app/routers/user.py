@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.get("/{id}", response_model=User, status_code=status.HTTP_200_OK)
-def read_user(id: int = Depends(get_current_user)):
+def read_user(id: int = None, current_user = Depends(get_current_user)):
     user = get_user(id)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
@@ -19,7 +19,7 @@ def read_user(id: int = Depends(get_current_user)):
 
 
 @router.get("/", response_model=List[User], status_code=status.HTTP_200_OK)
-def read_users(skip: int = 0, limit: int = 10):
+def read_users(skip: int = 0, limit: int = 10, current_user = Depends(get_current_user)):
     users = get_users(skip, limit)
     if not users:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No users found")
@@ -40,7 +40,9 @@ def create_user(user: UserCreate):
 
 
 @router.delete("/{id}", response_model=User, status_code=status.HTTP_200_OK)
-def remove_user(id: int):
+def remove_user(id: int, current_user: User = Depends(get_current_user)):
+    if current_user.id != id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"User not authorized to delete this user")
     user = delete_user(id)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
@@ -48,7 +50,9 @@ def remove_user(id: int):
 
 
 @router.put("/{id}", response_model=User, status_code=status.HTTP_200_OK)
-def change_user(id: int, user: UserCreate):
+def change_user(id: int, user: UserCreate, current_user: User = Depends(get_current_user)):
+    if current_user.id != id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"User not authorized to change this user")
     user = update_user(id, user.first_name, user.last_name, user.email, user.phone, user.username, user.password, user.role_id)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not found")
