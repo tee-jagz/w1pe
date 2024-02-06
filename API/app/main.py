@@ -1,8 +1,8 @@
 from fastapi import FastAPI, APIRouter
-from .database.db import create_tables
+from .database.test_data_queries import init_test
 from .routers import user, role, text, post, auth
 
-# create_tables()
+# init_test()
 
 app = FastAPI()
 

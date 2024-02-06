@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
+from .config import settings
 
 
 class UserBase(BaseModel):
@@ -15,7 +16,8 @@ class UserCreate(BaseModel):
     username: str
     password: str
     phone: str
-    role_id: Optional[int]
+    role_id: Optional[int] = 1
+    credit: Optional[int] = settings.start_credit
 
     # Validate password to have a minimum of 6 characters with at least one uppercase letter, one lowercase letter, one number, and one special character
     @validator('password')
@@ -31,13 +33,23 @@ class UserCreate(BaseModel):
         if not any(not char.isalnum() for char in v):
             raise ValueError('Password must contain at least one special character')
         return v
+    
+class UserUpdate(UserBase):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    email: Optional[EmailStr]
+    phone: Optional[str]
+    credit: Optional[int]
+    role_id: Optional[int]
+    username: Optional[str]
 
 
-class User(UserBase):
+class UserOutput(UserBase):
     first_name: str
     last_name: str
     email: EmailStr
     phone: str
+    credit: int
 
 
 class RoleBase(BaseModel):
@@ -52,7 +64,6 @@ class RoleOut(RoleBase):
     id: int
 
 class PostBase(BaseModel):
-    id: int
     content: str
     platform_id: int
     text_id: int
@@ -92,11 +103,26 @@ class TextOut(TextBase):
 class PlatformConfigBase(BaseModel):
     name: str
     character_limit: int
-    no_of_posts: int = 2
-    hashtag_usage: bool = False
-    mention_usage: bool = False
-    emoji_usage: bool = False
+    no_of_posts: Optional[int] = 2
+    hashtag_usage: Optional[bool] = False
+    mention_usage: Optional[bool] = False
+    emoji_usage: Optional[bool] = False
 
+
+class PlatformConfigCreate(PlatformConfigBase):
+    pass
+
+class PlatformConfigDefaultOutput(PlatformConfigBase):
+    id: int
+
+
+class PlatformConfigUser(PlatformConfigBase):
+    user_id: int
+    platform_id: int
+
+
+class PlatformConfigPost(PlatformConfigBase):
+    platform_id: int
 
 class LoginForm(BaseModel):
     email: EmailStr

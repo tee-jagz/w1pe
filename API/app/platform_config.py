@@ -1,4 +1,4 @@
-from .schemas import PlatformConfigBase
+from .schemas import PlatformConfigCreate
 
 twitter_config = {
     "name": "Twitter",
@@ -13,6 +13,6 @@ facebook_config = {
     "character_limit": 600
 }
 
-default_platform_configs = [PlatformConfigBase(**twitter_config),
-                            PlatformConfigBase(**instagram_config),
-                            PlatformConfigBase(**facebook_config)]
+default_platform_configs = [PlatformConfigCreate(**twitter_config),
+                            PlatformConfigCreate(**instagram_config),
+                            PlatformConfigCreate(**facebook_config)]

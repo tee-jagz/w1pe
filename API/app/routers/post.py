@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..database.post_queries import add_post, add_posts, get_post, get_posts, delete_post, update_post
+from ..database.post_queries import add_posts, get_post, get_posts, delete_post, update_post, get_post_with_config, get_created_posts
+from ..database.user_queries import get_user_platform_configs_with_name
 from ..generator import generate_social_media_posts
-from ..schemas import PostOut, PostCreate, PlatformConfigBase
+from ..schemas import PostOut, PostCreate, PlatformConfigBase, PlatformConfigUser
 from typing import List, Optional
 from ..oauth2 import get_current_user
 from ..schemas import TokenData
-from ..platform_config import default_platform_configs
-from ..utils import sum_of_platform_posts
+from ..utils import sum_of_platform_posts, sum_of_character_limit
+from ..config import settings
 
 router = APIRouter(
     prefix="/posts",
@@ -15,7 +16,9 @@ router = APIRouter(
 
 
 @router.get("/{id}", response_model=PostOut, status_code=status.HTTP_200_OK)
-def read_post(id: int):
+def read_post(id: int, config: Optional[bool] = False):
+    if config:
+        post = get_post_with_config(id)
     post = get_post(id)
     if not post:
         raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
@@ -31,16 +34,29 @@ def read_posts(skip: int = 0, limit: int = 10, text_id: Optional[int] = None, ow
 
 
 @router.post("/", response_model=List[PostOut], status_code=status.HTTP_201_CREATED)
-def create_posts(text_id: int, platform_config : List[PlatformConfigBase] = None, owner: TokenData = Depends(get_current_user)):
+def create_posts(text_id: int, platform_config : Optional[List[PlatformConfigUser]], owner: TokenData = Depends(get_current_user)):
     owner_id = owner.id
-    platform_config = platform_config if platform_config else default_platform_configs
+    if not platform_config:
+        platform_config : PlatformConfigUser = get_user_platform_configs_with_name(owner_id)
+    
+    character_limit = sum_of_character_limit(platform_config)
+
+    if character_limit > settings.character_limit:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Characters you are trying to generat is more than the limit ({settings.character_limit})")
+    
     try:
         posts = generate_social_media_posts(text_id=text_id, platforms_config=platform_config)
-        add_posts(posts, text_id, owner_id)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
+    try:
+        add_posts(posts, text_id, owner_id, platform_config)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    limit = sum_of_platform_posts(platform_config)
-    new_post = get_posts(0, limit, text_id, owner_id)
+    
+    response_limit = sum_of_platform_posts(platform_config)
+    new_post = get_created_posts(0, response_limit, text_id, owner_id)
+    
     if not new_post:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Post creation failed")
     return new_post

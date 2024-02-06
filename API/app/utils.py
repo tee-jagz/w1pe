@@ -1,6 +1,6 @@
 from passlib.context import CryptContext
 from typing import List
-from .schemas import PlatformConfigBase
+from .schemas import PlatformConfigUser, PlatformConfigBase
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -18,3 +18,8 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # Calculate sum of platform posts from list of platform configuration objects
 def sum_of_platform_posts(platforms: List[PlatformConfigBase]) -> int:
     return sum([platform.no_of_posts for platform in platforms])
+
+
+# Calculate sum of character limit from list of platform configuration objects
+def sum_of_character_limit(platforms: List[PlatformConfigUser]) -> int:
+    return sum([platform.character_limit for platform in platforms])

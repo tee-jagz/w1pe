@@ -7,3 +7,5 @@
 *db_dummy_data.py
 *instruction.py
 *.pyc
+*test_data_queries.py
+*sample_texts.py

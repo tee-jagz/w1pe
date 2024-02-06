@@ -15,5 +15,7 @@ class Settings(BaseSettings):
     algorithm: str
     access_token_expire_minutes: int
     oai_model_name: str
+    start_credit: int
+    character_limit: int
 
 settings = Settings()
