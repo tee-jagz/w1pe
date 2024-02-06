@@ -103,5 +103,7 @@ class LoginForm(BaseModel):
     password: str
 
 
-class TokenData(BaseModel):
-    user_id: int
+class TokenData(UserBase):
+    first_name: str
+    last_name: str
+    email: EmailStr

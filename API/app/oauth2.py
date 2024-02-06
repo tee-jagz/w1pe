@@ -25,13 +25,24 @@ def create_access_token(data: dict) -> str:
 def verify_token(token: str, credentials_exception) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("user_id")
+        user_id = payload.get("user_id")
+        first_name = payload.get("first_name")
+        last_name = payload.get("last_name")
+        email = payload.get("email")
+        username = payload.get("username")
+        role_id = payload.get("role_id")
+
         if user_id is None:
             raise credentials_exception
-        token_data = TokenData(user_id=user_id)
+        token_data = TokenData(id=user_id,
+                               first_name=first_name,
+                               last_name=last_name,
+                               email=email,
+                               username=username,
+                               role_id=role_id)
     except JWTError:
         raise credentials_exception
-    return token_data.user_id
+    return token_data
     
 
 def get_current_user(token: str = Depends(oauth2_scheme)):

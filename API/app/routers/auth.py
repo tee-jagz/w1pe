@@ -3,6 +3,7 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from ..utils import verify_password
 from ..db import get_user_by_email
 from ..oauth2 import create_access_token
+from ..schemas import TokenData
 
 
 router = APIRouter(
@@ -19,7 +20,17 @@ def login(credentials: OAuth2PasswordRequestForm = Depends()):
     verified = verify_password(credentials.password, user["password"])
     if not verified:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid credentials")
+    user = {
+        "user_id": user["id"],
+        "first_name": user["first_name"],
+        "last_name": user["last_name"],
+        "email": user["email"],
+        "username": user["username"],
+        "role_id": user["role_id"]
+    }
     
-    access_token = create_access_token(data={"user_id": user["id"]})
+
+    
+    access_token = create_access_token(data=user)
 
     return {"access_token": access_token, "token_type": "bearer"}
