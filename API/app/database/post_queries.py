@@ -44,7 +44,6 @@ def update_post(cur, id, content, posted):
     return True
 
 
-
 # Delete post from the database
 @session
 def delete_post(cur, id):

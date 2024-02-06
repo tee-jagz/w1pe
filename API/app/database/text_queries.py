@@ -39,6 +39,7 @@ def get_texts_of_user(cur, owner_id):
     cur.execute("SELECT * FROM texts WHERE owner_id=%s", (owner_id,))
     return cur.fetchall()
 
+
 # Update text in the database
 @session
 def update_text(cur, id, title, content, posted):

@@ -17,6 +17,7 @@ def get_user(cur, id):
     cur.execute("SELECT * FROM users WHERE id=%s", (id,))
     return cur.fetchone()
 
+
 # Get user by email from the database
 @session
 def get_user_by_email(cur, email):
