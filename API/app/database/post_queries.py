@@ -22,8 +22,8 @@ def add_posts(cur, posts, text_id, owner_id, platforms_config):
 
 # Get post from the database
 @session
-def get_post(cur, id):
-    cur.execute("SELECT * FROM posts WHERE id=%s", (id,))
+def get_post(cur, post_id):
+    cur.execute("SELECT * FROM posts WHERE id=%s", (post_id,))
     return cur.fetchone()
 
 
@@ -61,8 +61,8 @@ def get_created_posts(cur, limit, text_id, owner_id):
 
 # Update post in the database
 @session
-def update_post(cur, id, content, posted):
-    cur.execute("UPDATE posts SET content=%s, posted=%s WHERE id=%s", (content, posted, id))
+def update_post(cur, post_id, content, posted):
+    cur.execute("UPDATE posts SET content=%s, posted=%s WHERE id=%s", (content, posted, post_id))
     return True
 
 
@@ -71,3 +71,17 @@ def update_post(cur, id, content, posted):
 def delete_post(cur, id):
     cur.execute("DELETE FROM posts WHERE id=%s", (id,))
     return True
+
+
+# Get post owner by id from the database
+@session
+def get_post_owner(cur, post_id):
+    cur.execute("SELECT owner_id FROM posts WHERE id=%s", (post_id,))
+    return cur.fetchone()['owner_id']
+
+
+# Get post text by id from the database
+@session
+def get_post_text(cur, id):
+    cur.execute("SELECT text_id FROM posts WHERE id=%s", (id,))
+    return cur.fetchone()['text_id']

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..database.post_queries import add_posts, get_post, get_posts, delete_post, update_post, get_post_with_config, get_created_posts
+from ..database.post_queries import add_posts, get_post, get_posts, delete_post, update_post, get_post_with_config, get_created_posts, get_post_owner, get_post_text
 from ..database.user_queries import get_user_platform_configs_with_name
 from ..database.platform_queries import get_default_platform_configs
 from ..generator import generate_social_media_posts
-from ..schemas import PostOut, PostCreate, PlatformConfigCreate, PlatformConfigPostCreate
+from ..schemas import PostOut, PostCreate, PlatformConfigCreate, PlatformConfigPostCreate, PostUpdate
 from typing import List, Optional
 from ..oauth2 import get_current_user
 from ..schemas import TokenData
@@ -73,26 +73,27 @@ def create_posts(text_id: int, platform_config : Optional[List[PlatformConfigPos
     return new_post
 
 
-@router.delete("/{id}", response_model=PostOut, status_code=status.HTTP_200_OK)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_post(id: int, owner: TokenData = Depends(get_current_user)):
     post = get_post(id)
     if not post:
         raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
-    if post.owner_id != owner.id:
+    if post['owner_id'] != owner.id:
         raise HTTPException(status_code=403, detail=f"User not authorized to delete this post")
     
     post = delete_post(id)
     if not post:
         raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
-    return post
 
 
-@router.put("/{id}", response_model=PostOut, status_code=status.HTTP_200_OK)
-def change_post(id: int, post: PostCreate, owner: TokenData = Depends(get_current_user)):
-    if post.owner_id != owner.id:
+@router.put("/", response_model=PostOut, status_code=status.HTTP_200_OK)
+def change_post(post: PostUpdate, owner: TokenData = Depends(get_current_user)):
+    post_owner_id = get_post_owner(post.id)
+    if post_owner_id != owner.id:
         raise HTTPException(status_code=403, detail=f"User not authorized to update this post")
     
-    post = update_post(id, post.title, post.content, post.text_id, post.owner_id)
-    if not post:
+    posted = update_post(post.id, post.content, post.posted)
+    if not posted:
         raise HTTPException(status_code=404, detail=f"Post with id {id} not found")
-    return post
+    updated_post = get_post(post.id)
+    return updated_post

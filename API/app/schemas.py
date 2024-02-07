@@ -34,12 +34,12 @@ class UserCreate(BaseModel):
             raise ValueError('Password must contain at least one special character')
         return v
     
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
+    id: int
     first_name: Optional[str]
     last_name: Optional[str]
     email: Optional[EmailStr]
     phone: Optional[str]
-    credit: Optional[int]
     role_id: Optional[int]
     username: Optional[str]
 
@@ -65,17 +65,20 @@ class RoleOut(RoleBase):
 
 class PostBase(BaseModel):
     content: str
+    posted: bool = False
+
+
+class PostCreate(PostBase):
     platform_id: int
     text_id: int
     owner_id: int
 
+class PostUpdate(PostBase):
+    id: int
 
-class PostCreate(PostBase):
-    pass
 
-
-class PostOut(PostBase):
-    pass
+class PostOut(PostCreate):
+    id: int
 
 
 class TextBase(BaseModel):

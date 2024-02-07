@@ -66,9 +66,8 @@ def update_user(cur, user: UserUpdate):
     phone = user.phone
     username = user.username
     role_id = user.role_id
-    credit = user.credit
-    cur.execute("UPDATE users SET first_name=%s, last_name=%s, email=%s, phone=%s, username=%s, role_id=%s, credit=%s WHERE id=%s",
-                (first_name, last_name, email, phone, username, role_id, credit, id))
+    cur.execute("UPDATE users SET first_name=%s, last_name=%s, email=%s, phone=%s, username=%s, role_id=%s WHERE id=%s",
+                (first_name, last_name, email, phone, username, role_id, id))
     return True
 
 
