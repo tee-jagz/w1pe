@@ -37,7 +37,7 @@ def create_text(text: TextCreate):
     return new_text
 
 
-@router.delete("/{id}", status_code=status.HTTP_200_OK)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove_text(id: int, owner: TokenData = Depends(get_current_user)):
     text = get_text(id)
 
@@ -57,7 +57,7 @@ def change_text(text: TextUpdate, owner: TokenData = Depends(get_current_user)):
     text_owner_id = get_text_owner(text.id)
     if text_owner_id != owner.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"User not authorized to change this text")
-    updated_text = update_text(id, text.title, text.content, text.owner_id, text.posted)
+    updated_text = update_text(text.id, text.title, text.content, text.posted)
     if not updated_text:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Text with id {id} not found")
     updated_text = get_text(text.id)
