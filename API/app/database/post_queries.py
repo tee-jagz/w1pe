@@ -2,27 +2,41 @@ from .db import session
 
 
 # Add post to the database
-@session
-def add_post(cur, content, platform_id, text_id, owner_id):
-    cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id) VALUES(%s, %s, %s, %s)",
-                (content, platform_id, text_id, owner_id))
-    return True
+# @session
+# def add_post(cur, content, platform_id, text_id, owner_id):
+#     cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id) VALUES(%s, %s, %s, %s)",
+#                 (content, platform_id, text_id, owner_id))
+#     return True
 
 
 # Add multiple posts to the database
 @session
-def add_posts(cur, posts, text_id, owner_id):
+def add_posts(cur, posts, text_id, owner_id, platforms_config):
     for platform, posts in posts.items():
-        for post in posts:
+        platform_id = [platform_posts.platform_id for platform_posts in platforms_config if platform_posts.name.lower() == platform.lower()][0]
+        for content in posts:
             cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id) VALUES(%s, %s, %s, %s)",
-                        (post, 1, text_id, owner_id))
+                        (content, platform_id, text_id, owner_id))
     return True
 
 
 # Get post from the database
 @session
-def get_post(cur, id):
-    cur.execute("SELECT * FROM posts WHERE id=%s", (id,))
+def get_post(cur, post_id):
+    cur.execute("SELECT * FROM posts WHERE id=%s", (post_id,))
+    return cur.fetchone()
+
+
+# Get post with platform config from the database
+@session
+def get_post_with_config(cur, id):
+    cur.execute("""SELECT posts.id, posts.content, posts.created_at, posts.posted, posts.platform_id,
+                 posts.text_id, posts.owner_id, platform_configs.character_limit, platform_configs.no_of_posts,
+                 platform_configs.hashtag_usage, platform_configs.mention_usage, platform_configs.emoji_usage 
+                FROM posts 
+                JOIN platform_configs ON posts.platform_config_id=platform_configs.id 
+                WHERE posts.id=%s""",
+                 (id,))
     return cur.fetchone()
 
 
@@ -37,10 +51,18 @@ def get_posts(cur, skip, limit, text_id, owner_id):
     return cur.fetchall()
 
 
+# Get created posts by owner_id from the database
+@session
+def get_created_posts(cur, limit, text_id, owner_id):
+    cur.execute("SELECT * FROM posts WHERE text_id=%s AND owner_id=%s ORDER BY created_at DESC LIMIT %s", 
+                (text_id, owner_id, limit))
+    return cur.fetchall()
+
+
 # Update post in the database
 @session
-def update_post(cur, id, content, posted):
-    cur.execute("UPDATE posts SET content=%s, posted=%s WHERE id=%s", (content, posted, id))
+def update_post(cur, post_id, content, posted):
+    cur.execute("UPDATE posts SET content=%s, posted=%s WHERE id=%s", (content, posted, post_id))
     return True
 
 
@@ -49,3 +71,17 @@ def update_post(cur, id, content, posted):
 def delete_post(cur, id):
     cur.execute("DELETE FROM posts WHERE id=%s", (id,))
     return True
+
+
+# Get post owner by id from the database
+@session
+def get_post_owner(cur, post_id):
+    cur.execute("SELECT owner_id FROM posts WHERE id=%s", (post_id,))
+    return cur.fetchone()['owner_id']
+
+
+# Get post text by id from the database
+@session
+def get_post_text(cur, id):
+    cur.execute("SELECT text_id FROM posts WHERE id=%s", (id,))
+    return cur.fetchone()['text_id']

@@ -2,6 +2,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from ..config import settings
 
+default_credit = 100
+
 # Connection to the database
 def connect():
     return psycopg2.connect(
@@ -53,9 +55,11 @@ def create_tables(cur):
             ,phone TEXT NOT NULL
             ,username TEXT NOT NULL UNIQUE
             ,password TEXT NOT NULL
+            ,credit INT NOT NULL
             ,role_id INT NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ,FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL);
+            CREATE INDEX IF NOT EXISTS user_username_email_first_last_name_idx ON users(username, email, first_name, last_name);
                 
 
         CREATE TABLE IF NOT EXISTS texts(
@@ -66,6 +70,7 @@ def create_tables(cur):
             ,posted BOOLEAN DEFAULT FALSE
             ,owner_id INT NOT NULL
             ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE);
+            CREATE INDEX IF NOT EXISTS text_title_idx ON texts(title);
                 
         
         CREATE TABLE IF NOT EXISTS platforms(
@@ -78,17 +83,46 @@ def create_tables(cur):
             ,emoji_usage BOOLEAN NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
                 
+
+        CREATE TABLE IF NOT EXISTS user_platform_configs(
+            user_id INT NOT NULL
+            ,platform_id INT NOT NULL
+            ,character_limit INT NOT NULL
+            ,no_of_posts INT NOT NULL
+            ,hashtag_usage BOOLEAN NOT NULL
+            ,mention_usage BOOLEAN NOT NULL
+            ,emoji_usage BOOLEAN NOT NULL
+            ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ,PRIMARY KEY (user_id, platform_id)
+            ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
+            ,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);
+                
                 
         CREATE TABLE IF NOT EXISTS posts(
             id SERIAL PRIMARY KEY
             ,content TEXT NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ,posted BOOLEAN DEFAULT FALSE
-            ,platform_id INT NOT NULL
             ,text_id INT NOT NULL
             ,owner_id INT NOT NULL
-            ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
+            ,platform_id INT NOT NULL
             ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
-            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE);                
+            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE
+            ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE);       
      """)
+    return True
+
+
+# Drop tables in database
+@session
+def drop_tables(cur):
+    cur.execute("""
+        DROP TABLE IF EXISTS posts CASCADE;
+        DROP TABLE IF EXISTS user_platform_configs CASCADE;
+        DROP TABLE IF EXISTS post_platform_configs CASCADE;
+        DROP TABLE IF EXISTS platforms CASCADE;
+        DROP TABLE IF EXISTS texts CASCADE;
+        DROP TABLE IF EXISTS users CASCADE;
+        DROP TABLE IF EXISTS roles CASCADE;
+    """)
     return True
