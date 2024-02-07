@@ -5,3 +5,4 @@ from .db import session
 def get_default_platform_configs(cur):
     cur.execute("SELECT * FROM platforms")
     return cur.fetchall()
+

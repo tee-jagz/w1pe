@@ -13,13 +13,10 @@ from .db import session
 @session
 def add_posts(cur, posts, text_id, owner_id, platforms_config):
     for platform, posts in posts.items():
-        platform_id = [platform_posts['id'] for platform_posts in platforms_config if platform['name'] == platform][0]
-        for post in posts:
-            
-            content = post['content']
-            platform_config_id = post['platform_config_id']
-            cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id, platform_config_id) VALUES(%s, %s, %s, %s, %s)",
-                        (content, platform_id, text_id, owner_id, platform_config_id))
+        platform_id = [platform_posts.platform_id for platform_posts in platforms_config if platform_posts.name.lower() == platform.lower()][0]
+        for content in posts:
+            cur.execute("INSERT INTO posts(content, platform_id, text_id, owner_id) VALUES(%s, %s, %s, %s)",
+                        (content, platform_id, text_id, owner_id))
     return True
 
 

@@ -70,11 +70,8 @@ class PostBase(BaseModel):
     owner_id: int
 
 
-class PostCreate(BaseModel):
-    content: str
-    platform_id: int
-    text_id: int
-    owner_id: int
+class PostCreate(PostBase):
+    pass
 
 
 class PostOut(PostBase):
@@ -112,16 +109,15 @@ class PlatformConfigBase(BaseModel):
 class PlatformConfigCreate(PlatformConfigBase):
     pass
 
+class PlatformConfigPostCreate(PlatformConfigBase):
+    platform_id: Optional[int] = None
+
 class PlatformConfigDefaultOutput(PlatformConfigBase):
     id: int
 
 
 class PlatformConfigUser(PlatformConfigBase):
     user_id: int
-    platform_id: int
-
-
-class PlatformConfigPost(PlatformConfigBase):
     platform_id: int
 
 class LoginForm(BaseModel):

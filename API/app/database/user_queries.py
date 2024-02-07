@@ -82,7 +82,7 @@ def delete_user(cur, id):
 # Get user platform configs from the database
 @session
 def get_user_platform_configs_with_name(cur, user_id) -> PlatformConfigUser:
-    cur.execute("""SELECT user_platform_configs.id, user_platform_configs.user_id,user_platform_configs.platform_id, platforms.name, user_platform_configs.character_limit,
+    cur.execute("""SELECT user_platform_configs.user_id,user_platform_configs.platform_id, platforms.name, user_platform_configs.character_limit,
                  user_platform_configs.no_of_posts, user_platform_configs.hashtag_usage, user_platform_configs.mention_usage, user_platform_configs.emoji_usage 
                 FROM user_platform_configs 
                 JOIN platforms ON user_platform_configs.platform_id=platforms.id 

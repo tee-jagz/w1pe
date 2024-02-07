@@ -31,14 +31,11 @@ def read_users(skip: int = 0, limit: int = 10, current_user = Depends(get_curren
 @router.post("/", response_model=UserOutput, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate):
     default_platform_config: List[PlatformConfigDefaultOutput] = get_default_platform_configs()
-    print("creating user")
     try:
         add_user(user)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    print("user created")
     new_user = get_user_by_email(user.email)
-    print("new_user")
     if not new_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User creation failed")
     add_user_default_platform_configs(new_user['id'], default_platform_config)

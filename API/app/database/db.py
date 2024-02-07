@@ -84,21 +84,8 @@ def create_tables(cur):
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
                 
 
-        CREATE TABLE IF NOT EXISTS post_platform_configs(
-            id SERIAL PRIMARY KEY
-            ,platform_id INT NOT NULL
-            ,character_limit INT NOT NULL
-            ,no_of_posts INT NOT NULL
-            ,hashtag_usage BOOLEAN NOT NULL
-            ,mention_usage BOOLEAN NOT NULL
-            ,emoji_usage BOOLEAN NOT NULL
-            ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE);
-                
-
         CREATE TABLE IF NOT EXISTS user_platform_configs(
-            id SERIAL PRIMARY KEY
-            ,user_id INT NOT NULL
+            user_id INT NOT NULL
             ,platform_id INT NOT NULL
             ,character_limit INT NOT NULL
             ,no_of_posts INT NOT NULL
@@ -106,6 +93,7 @@ def create_tables(cur):
             ,mention_usage BOOLEAN NOT NULL
             ,emoji_usage BOOLEAN NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ,PRIMARY KEY (user_id, platform_id)
             ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE
             ,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);
                 
@@ -115,12 +103,12 @@ def create_tables(cur):
             ,content TEXT NOT NULL
             ,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ,posted BOOLEAN DEFAULT FALSE
-            ,platform_config_id INT NOT NULL
             ,text_id INT NOT NULL
             ,owner_id INT NOT NULL
-            ,FOREIGN KEY (platform_config_id) REFERENCES post_platform_configs(id) ON DELETE CASCADE
+            ,platform_id INT NOT NULL
             ,FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
-            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE);          
+            ,FOREIGN KEY (text_id) REFERENCES texts(id) ON DELETE CASCADE
+            ,FOREIGN KEY (platform_id) REFERENCES platforms(id) ON DELETE CASCADE);       
      """)
     return True
 
@@ -130,7 +118,7 @@ def create_tables(cur):
 def drop_tables(cur):
     cur.execute("""
         DROP TABLE IF EXISTS posts CASCADE;
-        DROP TABLE IF EXISTS user_default_platform_configs CASCADE;
+        DROP TABLE IF EXISTS user_platform_configs CASCADE;
         DROP TABLE IF EXISTS post_platform_configs CASCADE;
         DROP TABLE IF EXISTS platforms CASCADE;
         DROP TABLE IF EXISTS texts CASCADE;
