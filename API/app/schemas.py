@@ -82,7 +82,6 @@ class PostOut(PostCreate):
 
 
 class TextBase(BaseModel):
-    id: int
     title: Optional[str]
     content: str
     owner_id: int
@@ -97,7 +96,14 @@ class TextCreate(BaseModel):
 
 
 class TextOut(TextBase):
-    pass
+    id: int
+
+
+class TextUpdate(BaseModel):
+    id: int
+    title: Optional[str]
+    content: Optional[str]
+    posted: Optional[bool]
 
 
 class PlatformConfigBase(BaseModel):

@@ -52,3 +52,10 @@ def update_text(cur, id, title, content, posted):
 def delete_text(cur, id):
     cur.execute("DELETE FROM texts WHERE id=%s", (id,))
     return True
+
+
+# Get text owner by id from the database
+@session
+def get_text_owner(cur, id):
+    cur.execute("SELECT owner_id FROM texts WHERE id=%s", (id,))
+    return cur.fetchone()['owner_id']
