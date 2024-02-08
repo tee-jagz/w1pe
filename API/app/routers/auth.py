@@ -26,7 +26,8 @@ def login(credentials: OAuth2PasswordRequestForm = Depends()):
         "last_name": user["last_name"],
         "email": user["email"],
         "username": user["username"],
-        "role_id": user["role_id"]
+        "role_id": user["role_id"],
+        "credit": user["credit"]
     }
     
 

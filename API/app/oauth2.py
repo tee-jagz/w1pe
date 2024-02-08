@@ -31,6 +31,7 @@ def verify_token(token: str, credentials_exception) -> dict:
         email = payload.get("email")
         username = payload.get("username")
         role_id = payload.get("role_id")
+        credit = payload.get("credit")
 
         if user_id is None:
             raise credentials_exception
@@ -39,7 +40,8 @@ def verify_token(token: str, credentials_exception) -> dict:
                                last_name=last_name,
                                email=email,
                                username=username,
-                               role_id=role_id)
+                               role_id=role_id,
+                               credit=credit)
     except JWTError:
         raise credentials_exception
     return token_data

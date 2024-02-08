@@ -1,6 +1,6 @@
 from .db import session
 from ..utils import hash_password
-from ..schemas import UserCreate,  UserUpdate, PlatformConfigUser
+from ..schemas import UserCreate,  UserUpdate, PlatformConfigUser, TokenData
 from typing import List
 
 
@@ -44,7 +44,7 @@ def get_user(cur, id):
 
 # Get user by email from the database
 @session
-def get_user_by_email(cur, email):
+def get_user_by_email(cur, email) -> List[TokenData]:
     cur.execute("SELECT * FROM users WHERE email=%s", (email,))
     return cur.fetchone()
 

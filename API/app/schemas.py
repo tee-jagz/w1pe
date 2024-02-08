@@ -34,6 +34,16 @@ class UserCreate(BaseModel):
             raise ValueError('Password must contain at least one special character')
         return v
     
+    # Validate username to have a between of 3 to 15 caracters with only _, ., and - as special characters allowed and no spaces
+    @validator('username')
+    def validate_username(cls, v):
+        if len(v) < 3 or len(v) > 15:
+            raise ValueError('Username must be between 3 and 15 characters long')
+        if not v.isalnum() and not all(char in ['_', '.', '-'] for char in v):
+            raise ValueError('Username can only contain letters, numbers, _, ., and -')
+        return v
+    
+    
 class UserUpdate(BaseModel):
     id: int
     first_name: Optional[str]
@@ -42,6 +52,15 @@ class UserUpdate(BaseModel):
     phone: Optional[str]
     role_id: Optional[int]
     username: Optional[str]
+
+    # Validate username to have a between of 3 to 15 caracters with only _, ., and - as special characters allowed and no spaces
+    @validator('username')
+    def validate_username(cls, v):
+        if len(v) < 3 or len(v) > 15:
+            raise ValueError('Username must be between 3 and 15 characters long')
+        if not v.isalnum() and not all(char in ['_', '.', '-'] for char in v):
+            raise ValueError('Username can only contain letters, numbers, _, ., and -')
+        return v
 
 
 class UserOutput(UserBase):
@@ -63,6 +82,7 @@ class RoleCreate(RoleBase):
 class RoleOut(RoleBase):
     id: int
 
+
 class PostBase(BaseModel):
     content: str
     posted: bool = False
@@ -72,6 +92,7 @@ class PostCreate(PostBase):
     platform_id: int
     text_id: int
     owner_id: int
+
 
 class PostUpdate(PostBase):
     id: int
@@ -118,8 +139,10 @@ class PlatformConfigBase(BaseModel):
 class PlatformConfigCreate(PlatformConfigBase):
     pass
 
+
 class PlatformConfigPostCreate(PlatformConfigBase):
     platform_id: Optional[int] = None
+
 
 class PlatformConfigDefaultOutput(PlatformConfigBase):
     id: int
@@ -128,6 +151,7 @@ class PlatformConfigDefaultOutput(PlatformConfigBase):
 class PlatformConfigUser(PlatformConfigBase):
     user_id: int
     platform_id: int
+
 
 class LoginForm(BaseModel):
     email: EmailStr
@@ -138,3 +162,4 @@ class TokenData(UserBase):
     first_name: str
     last_name: str
     email: EmailStr
+    credit: int
