@@ -25,7 +25,7 @@ def create_access_token(data: dict) -> str:
 def verify_token(token: str, credentials_exception) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id = payload.get("user_id")
+        user_id = payload.get("id")
         first_name = payload.get("first_name")
         last_name = payload.get("last_name")
         email = payload.get("email")

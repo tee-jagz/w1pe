@@ -71,6 +71,12 @@ class UserOutput(UserBase):
     credit: int
 
 
+class UserOutputComplete(UserOutput):
+    role_id: int
+    username: str
+    password: str
+
+
 class RoleBase(BaseModel):
     name: str
 
