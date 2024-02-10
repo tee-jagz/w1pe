@@ -1,5 +1,4 @@
-from .database.text_queries import get_text
-from .platform_config import default_platform_configs
+from .database.models import Text
 from .schemas import PlatformConfigBase
 from typing import List
 from .config import settings
@@ -10,10 +9,9 @@ import json
 
 client = OpenAI(api_key=settings.openai_api_key)
 
-def generate_social_media_posts(text_id: int, platforms_config: List[PlatformConfigBase]) :
-    text = get_text(text_id)
-    text = text["content"]
-    user_input = f'"text": {text}\n"platform_configuratons": {platforms_config}'
+def generate_social_media_posts(text_id: int, platforms_config: List[PlatformConfigBase], db) : 
+    text = db.query(Text).filter(Text.id == text_id).first()
+    user_input = f'"text": {text.content}\n"platform_configuratons": {platforms_config}'
     completion = client.chat.completions.create(
         messages=[
             {
@@ -24,4 +22,5 @@ def generate_social_media_posts(text_id: int, platforms_config: List[PlatformCon
         model=settings.oai_model_name,
         response_format={"type": "json_object"},
     )
-    return json.loads(completion.choices[0].message.content)
+    response = json.loads(completion.choices[0].message.content)
+    return response

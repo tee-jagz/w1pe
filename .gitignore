@@ -9,3 +9,13 @@
 *.pyc
 *test_data_queries.py
 *sample_texts.py
+*node_modules*
+*package-lock.json
+*package.json
+*webpack.config.js
+*src
+*public
+*build
+*dist
+*node_modules
+*.ts

@@ -1,19 +1,25 @@
-from .db import session, create_tables
+from sqlalchemy.orm import sessionmaker
+from .db import engine
+from .models import Role, Platform
 
-# Insert default data into the database
-@session
-def insert_default_data(cur):
-    cur.execute("""
-        INSERT INTO roles(name) VALUES('default');
-        INSERT INTO platforms(name, character_limit, no_of_posts, hashtag_usage, mention_usage, emoji_usage) VALUES('facebook', 500, 2, FALSE, FALSE, FALSE);
-        INSERT INTO platforms(name, character_limit, no_of_posts, hashtag_usage, mention_usage, emoji_usage) VALUES('twitter', 280, 2, FALSE, FALSE, FALSE);
-        INSERT INTO platforms(name, character_limit, no_of_posts, hashtag_usage, mention_usage, emoji_usage) VALUES('instagram', 40, 2, FALSE, FALSE, FALSE);
-    """)
-    return True
+# Create an engine and session
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
-# Initialize database
-def init():
-    create_tables()
-    insert_default_data()
-    return True
+def insert_default_roles():
+    # Insert test roles into the database
+    role1 = Role(name='default', description='Default user')
+    role2 = Role(name='user', description='Regular user')
+    session.add_all([role1, role2])
+    session.commit()
+
+def insert_default_platforms():
+    # Insert test platforms into the database
+    platform1 = Platform(name='Twitter', character_limit=280, no_of_posts=2, hashtag_usage=False, mention_usage=False, emoji_usage=False)
+    platform2 = Platform(name='Facebook', character_limit=500, no_of_posts=2, hashtag_usage=False, mention_usage=False, emoji_usage=False)
+    platform3 = Platform(name='Instagram', character_limit=40, no_of_posts=2, hashtag_usage=False, mention_usage=False, emoji_usage=False)
+    session.add_all([platform1, platform2, platform3])
+    session.commit()
+
+

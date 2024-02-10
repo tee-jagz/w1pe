@@ -1,6 +1,10 @@
 from fastapi import FastAPI, APIRouter
 from .database.test_data_queries import init_test
 from .routers import user, role, text, post, auth
+from .database.models import Base
+from .database.db import engine
+
+Base.metadata.create_all(bind=engine)
 
 # init_test()
 

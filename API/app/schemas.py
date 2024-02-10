@@ -8,6 +8,9 @@ class UserBase(BaseModel):
     username: str
     role_id: int
 
+    class Config:
+        from_attributes = True
+
 
 class UserCreate(BaseModel):
     first_name: str
@@ -43,6 +46,9 @@ class UserCreate(BaseModel):
             raise ValueError('Username can only contain letters, numbers, _, ., and -')
         return v
     
+    class Config:
+        from_attributes = True
+    
     
 class UserUpdate(BaseModel):
     id: int
@@ -61,6 +67,9 @@ class UserUpdate(BaseModel):
         if not v.isalnum() and not all(char in ['_', '.', '-'] for char in v):
             raise ValueError('Username can only contain letters, numbers, _, ., and -')
         return v
+    
+    class Config:
+        from_attributes = True
 
 
 class UserOutput(UserBase):
@@ -80,6 +89,9 @@ class UserOutputComplete(UserOutput):
 class RoleBase(BaseModel):
     name: str
 
+    class Config:
+        from_attributes = True
+
 
 class RoleCreate(RoleBase):
     pass
@@ -93,11 +105,14 @@ class PostBase(BaseModel):
     content: str
     posted: bool = False
 
+    class Config:
+        from_attributes = True
+
 
 class PostCreate(PostBase):
     platform_id: int
     text_id: int
-    owner_id: int
+    user_id: int
 
 
 class PostUpdate(PostBase):
@@ -111,15 +126,21 @@ class PostOut(PostCreate):
 class TextBase(BaseModel):
     title: Optional[str]
     content: str
-    owner_id: int
+    user_id: int
     posted: bool
+
+    class Config:
+        from_attributes = True
 
 
 class TextCreate(BaseModel):
     title: Optional[str]
     content: str
-    owner_id: int
     posted: bool = False
+    user_id: Optional[int] = None
+
+    class Config:
+        from_attributes = True
 
 
 class TextOut(TextBase):
@@ -132,6 +153,9 @@ class TextUpdate(BaseModel):
     content: Optional[str]
     posted: Optional[bool]
 
+    class Config:
+        from_attributes = True
+
 
 class PlatformConfigBase(BaseModel):
     name: str
@@ -140,6 +164,9 @@ class PlatformConfigBase(BaseModel):
     hashtag_usage: Optional[bool] = False
     mention_usage: Optional[bool] = False
     emoji_usage: Optional[bool] = False
+
+    class Config:
+        from_attributes = True
 
 
 class PlatformConfigCreate(PlatformConfigBase):
@@ -163,9 +190,18 @@ class LoginForm(BaseModel):
     email: EmailStr
     password: str
 
+    class Config:
+        from_attributes = True
 
-class TokenData(UserBase):
+
+class TokenData(BaseModel):
+    id: int
+    username: str
+    role_id: int
     first_name: str
     last_name: str
     email: EmailStr
     credit: int
+
+    class Config:
+        from_attributes = True
