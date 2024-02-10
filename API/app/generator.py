@@ -10,9 +10,6 @@ import json
 client = OpenAI(api_key=settings.openai_api_key)
 
 def generate_social_media_posts(text_id: int, platforms_config: List[PlatformConfigBase], db) :
-    print("Generating social media posts")
-    print(platforms_config)
-    print("-"*20)
     text = db.query(Text).filter(Text.id == text_id).first()
     user_input = f'"text": {text.content}\n"platform_configuratons": {platforms_config}'
     completion = client.chat.completions.create(
