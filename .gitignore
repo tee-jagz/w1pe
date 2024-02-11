@@ -19,3 +19,8 @@
 *dist
 *node_modules
 *.ts
+*cache/
+*client/
+*w1pe/
+*.gz
+*.old
