@@ -9,18 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
-=======
->>>>>>> 755438e1a05707fe5f12fd696fac449d95e9349a
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.323.0",
     "next": "14.1.0",
-<<<<<<< HEAD
     "next-themes": "^0.2.1",
     "react": "^18",
     "react-dom": "^18",
@@ -28,12 +24,6 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
-=======
-    "react": "^18",
-    "react-dom": "^18",
-    "tailwind-merge": "^2.2.1",
-    "tailwindcss-animate": "^1.0.7"
->>>>>>> 755438e1a05707fe5f12fd696fac449d95e9349a
   },
   "devDependencies": {
     "@types/node": "^20",
