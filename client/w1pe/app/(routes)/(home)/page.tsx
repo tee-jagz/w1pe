@@ -57,8 +57,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen h-[1000px] flex-col items-center justify-between">
-      <header className="h-[80%] w-3/4 bg-red-0">
+    <main className="flex min-h-screen flex-col items-center justify-between">
+      <header className="h-dvh w-3/4 bg-red-0">
         <head className="flex flex-row justify-between align-middle items-center pr-16 pl-10 pt-2.5 pb-2.5 m-0 fixed top-0 w-dvw">
           <h1>W1PE</h1>
           <div className="flex flex-row justify-between">
@@ -73,10 +73,10 @@ export default function Home() {
             <div className="w-2/3 h-full flex flex-col items-end pr-10 justify-center">
               <Card className="w-4/5 border-0 shadow-transparent">
                 <CardHeader>
-                  <CardTitle>Write Once, Post Everywhere</CardTitle>
-                  <CardDescription>Seamlessly synchronize your social media storytelling.</CardDescription>
+                  <CardTitle className="text-7xl">Write Once, Post Everywhere</CardTitle>
+                  <CardDescription className="text-3xl">Seamlessly synchronize your social media storytelling.</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-xl">
                   <h3>Elevate your social presence by composing a single post and sharing it across all platforms with a single click. W1PE is your gateway to effortless, unified social media management.</h3>
                   <ul>
                     <li>📝 Craft Your Message: Write your content once and let W1PE adapt it for each social media platform’s unique format.</li>
@@ -108,7 +108,7 @@ export default function Home() {
                           </FormItem>
                         )}
                       />                  
-                      <Button className="w-full mt-1 mb-0" type="submit">Start converging your content with W1PE today! →</Button>
+                      <Button className="w-full mt-1 mb-0 text-lg pt-5 pb-5" type="submit">Start generating your contents →</Button>
                     </form>
                   </Form>
                 </CardContent>
@@ -120,7 +120,7 @@ export default function Home() {
           </div>
       </header>
       
-      <div className="w-full pb-10 pl-10 pr-10">
+      <div className="w-full pb-10 pl-10 pr-10 relative top-[-10rem]">
         <ScrollArea className="flex w-full rounded-md border">
           <div className="flex space-x-4 p-4 w-max">
             {posts.map((post) => (

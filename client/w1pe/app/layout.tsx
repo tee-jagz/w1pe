@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-<<<<<<< HEAD
 import { ThemeProvider } from "@/components/theme-provider";
-=======
->>>>>>> 755438e1a05707fe5f12fd696fac449d95e9349a
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +17,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-<<<<<<< HEAD
       <body className={inter.className}>
       <ThemeProvider
             attribute="class"
@@ -31,9 +27,6 @@ export default function RootLayout({
         {children}
       </ThemeProvider>
         </body>
-=======
-      <body className={inter.className}>{children}</body>
->>>>>>> 755438e1a05707fe5f12fd696fac449d95e9349a
     </html>
   );
 }
