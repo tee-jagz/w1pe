@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Facebook, Instagram, Twitter, Linkedin, XIcon } from "lucide-react";
+import { Facebook, Linkedin } from "lucide-react";
+import { XOutlined, FacebookOutlined, LinkedinOutlined, InstagramOutlined } from "@ant-design/icons";
 
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
+  Carousel,
+  CarouselItem,
+  CarouselContent,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
   Card,
   CardContent,
   CardFooter,
@@ -26,10 +33,15 @@ import {
   CardTitle,
   CardDescription
 } from "@/components/ui/card";
+import HeadNav from "./headNav";
 
 const formSchema = z.object({
   email: z.string().email(),
 });
+
+const iconStyles = {
+  fontSize: "1.5rem",
+};
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -47,9 +59,11 @@ export default function Home() {
     fetch(`http://127.0.0.1:8000/users/checkemail?email=${values.email}`)
     .then((response) => 
     {response.status == 404 ? console.log(response) : response.json()}).then((data) => {
-      
       console.log(data);
-    });
+    }).catch((error) => {
+      console.error('Error:', error
+      )}
+    );
   }
 
 
@@ -62,24 +76,15 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <header className="h-dvh w-3/4 flex flex-col justify-center">
-        <head className="flex flex-row justify-between align-middle items-center pr-16 pl-10 pt-2.5 pb-2.5 m-0 fixed top-0 w-dvw">
-          <h1>W1PE</h1>
-          <div className="flex flex-row justify-between">
-            <nav className="w-40 h-[100%] flex flex-row items-center justify-around ">
-              <Button variant={"link"}>Billing</Button>
-              <Button variant={"link"}>Library</Button>
-            </nav>
-            <Button>Generate Post →</Button>
-          </div>
-        </head>
-        <div className="flex lg:flex-row flex-col justify-center w-full h-5/6 bg-slate-0">
-            <div className="lg:w-2/3 w-full lg:min-w-[600px] min-w-[400px] h-full flex flex-col lg:items-end items-center lg:pr-10 justify-center">
+        <HeadNav></HeadNav>
+        <div className="flex lg:flex-row flex-col justify-center w-full h-5/6">
+            <div className="lg:w-2/3 w-full lg:min-w-[600px] min-w-[300px] h-full flex flex-col lg:items-end items-center lg:pr-10 justify-center">
               <Card className="lg:w-4/5 w-full border-0 shadow-transparent">
                 <CardHeader>
-                  <CardTitle className="lg:text-7xl text-6xl">Write Once, Post Everywhere</CardTitle>
-                  <CardDescription className="lg:text-3xl text-2xl">Seamlessly synchronize your social media storytelling.</CardDescription>
+                  <CardTitle className="lg:text-7xl text-6xl sm:text-4xl">Write Once, Post Everywhere</CardTitle>
+                  <CardDescription className="lg:text-3xl text-2xl sm:text-xl">Seamlessly synchronize your social media storytelling.</CardDescription>
                 </CardHeader>
-                <CardContent className="lg:text-xl text-lg">
+                <CardContent className="lg:text-xl text-lg sm:text-md">
                   <h3 className="mb-4">Elevate your social presence by composing a single post and sharing it across all platforms with a single click. W1PE is your gateway to effortless, unified social media management.</h3>
                   <ul>
                     <li className="mb-2">📝 Write once, W1PE adapts your message for all social platforms</li>
@@ -94,7 +99,7 @@ export default function Home() {
                 </CardFooter>
               </Card>
             </div>
-            <div className="lg:w-1/3 w-full min-w-[400px] h-full flex flex-col justify-center lg:items-start items-center lg:pl-10">
+            <div className="lg:w-1/3 w-full min-w-[320px] h-full flex flex-col justify-center lg:items-start items-center lg:pl-10">
               <Card className="w-full lg:w-4/5  pt-10 pb-10 pl-5 pr-5">
                 <CardContent className="mb-0 p-0">
                   <Form {...form}>
@@ -111,7 +116,7 @@ export default function Home() {
                           </FormItem>
                         )}
                       />                  
-                      <Button className="w-full mt-1 mb-0 text-lg pt-5 pb-5" type="submit">Start generating your contents →</Button>
+                      <Button className="w-full mt-1 mb-0 text-lg pt-5 pb-5" type="submit">Start generating contents →</Button>
                     </form>
                   </Form>
                 </CardContent>
@@ -123,35 +128,37 @@ export default function Home() {
           </div>
       </header>
       
-      <div className="w-full pb-10 pl-10 pr-10 relative lg:top-[-10rem] top-[-5rem]">
+      <div className="w-full pb-10 pl-10 pr-10 relative lg:top-[-10rem] top-[-5rem] max-[450px]:top-0">
         <div className="mb-4 flex flex-row align-middle items-center justify-center space-x-5">
           <h2 className="opacity-60">featured socials</h2>
           <Facebook></Facebook>
-          <Twitter></Twitter>
-          <Instagram></Instagram>
+          <InstagramOutlined style={iconStyles}></InstagramOutlined>
           <Linkedin></Linkedin>
-          <XIcon></XIcon>
+          <XOutlined style={iconStyles}></XOutlined>
         </div>
-        <ScrollArea className="flex w-full rounded-md border">
-          <div className="flex space-x-4 p-4 w-max">
-            {posts.map((post) => (
-              
-              <Card key={post.id} className="shrink-0 w-[40rem]">
-                <CardHeader>
-                  <CardTitle>{post.platform_id == 1 ? <Twitter></Twitter> : <Facebook></Facebook>}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>{post.content}</p>
-                </CardContent>
-                <CardFooter>
-                  <p>Published on ?</p>
-                </CardFooter>
-              </Card>
-              
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+        <div className="w-full flex flex-row justify-center">
+          <Carousel className="flex flex-wrap w-5/6 space-y-4 space-x-2 p-4">
+            <CarouselContent>
+              {posts.map((post) => (
+                <CarouselItem key={post.id} className="lg:basis-1/3 sm:basis-1 md:basis-1/2">                
+                  <Card className="shrink-0 h-74">
+                    <CardHeader>
+                      <CardTitle>{post.platform_id == 1 ? <XOutlined></XOutlined>: <Facebook></Facebook>}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p>{`${post.content.slice(0, 240)} ${post.content.length > 240 ? "..." : ""}`}</p>
+                    </CardContent>
+                    <CardFooter>
+                      <p>Published on ?</p>
+                    </CardFooter>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious/>
+            <CarouselNext/>
+          </Carousel>
+        </div>
       </div>
     </main>
   );

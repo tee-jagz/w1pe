@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from ..schemas import UserOutput, UserCreate, PlatformConfigDefaultOutput, UserUpdate, PlatformConfigUser
+from ..schemas import UserOutput, UserCreate, PlatformConfigDefaultOutput, UserUpdate, PlatformConfigUser, UserEmail
 from typing import List, Optional
 from ..oauth2 import get_current_user
 from ..database import db
@@ -13,9 +13,8 @@ router = APIRouter(
 )
 
 
-@router.get("/checkemail", response_model=List[UserOutput], status_code=status.HTTP_200_OK)
+@router.get("/checkemail", response_model=UserEmail, status_code=status.HTTP_200_OK)
 def check_email(email: str = None, db: Session = Depends(db.get_db)):
-    print(email)
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with email {email} not found")

@@ -48,6 +48,10 @@ class UserCreate(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+class UserEmail(BaseModel):
+    email: EmailStr
     
     
 class UserUpdate(BaseModel):
