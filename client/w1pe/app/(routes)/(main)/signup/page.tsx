@@ -36,13 +36,14 @@ const formSchema = z.object({
 
 
 export default function SignUp() {
+    const email = localStorage.getItem('email');
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
         firstname: "",
         lastname: "",
         username: "",
-        email: "",
+        email: email ? email : "",
         password: "",
         confirmPassword: "",
         },

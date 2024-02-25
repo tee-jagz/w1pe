@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { 
@@ -33,10 +34,13 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const email = localStorage.getItem('email');
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
+            email: email ? email : "",
             password: "",
         },
     });
@@ -48,15 +52,22 @@ export default function Login() {
     function onSubmit(values) {
         formData.append('username', values.email.toLowerCase());
         formData.append('password', values.password);
+       
+
+
         fetch('http://127.0.0.1:8000/login/', {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
+            if (data.access_token){
             localStorage.setItem('access_token', data.access_token);
-            form.reset();
-            console.log(data)})
+            router.push('/dashboard');
+        }   else {
+            console.log(data)
+        }
+        })
         .catch(error => console.log(error));
     }
 

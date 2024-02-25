@@ -58,9 +58,14 @@ export default function Home() {
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    fetch(`http://127.0.0.1:8000/users/checkemail?email=${values.email}`)
+    localStorage.setItem('email', values.email.toLowerCase());
+    fetch(`http://127.0.0.1:8000/users/checkemail?email=${values.email.toLowerCase()}`)
     .then((response) => 
-    {response.status == 404 ? router.push('/signup') : response.status == 200 ? router.push('/login'): response.json()}).then((data) => {
+    {response.status == 404 ?
+      router.push('/signup') :
+      response.status == 200 ?
+      router.push(`/login`) :
+      response.json()}).then((data) => {
       console.log(data);
     }).catch((error) => {
       console.error('Error:', error
