@@ -1,6 +1,7 @@
 "use client";
 
 import Sidebar from "./sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function MainLayout({
     children,
@@ -13,6 +14,7 @@ export default function MainLayout({
             <div className="w-5/6 h-full">
             {children}
             </div>
+            <Toaster/>
         </main>
     );
     }
