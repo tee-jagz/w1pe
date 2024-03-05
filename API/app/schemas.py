@@ -185,9 +185,17 @@ class PlatformConfigDefaultOutput(PlatformConfigBase):
     id: int
 
 
-class PlatformConfigUser(PlatformConfigBase):
+class PlatformConfigUser(BaseModel):
     user_id: int
     platform_id: int
+    character_limit: int
+    no_of_posts: Optional[int] = 2
+    hashtag_usage: Optional[bool] = False
+    mention_usage: Optional[bool] = False
+    emoji_usage: Optional[bool] = False
+
+    class Config:
+        from_attributes = True
 
 
 class LoginForm(BaseModel):

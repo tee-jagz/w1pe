@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Response
 from ..generator import generate_social_media_posts
 from ..schemas import PostOut, PostCreate, PlatformConfigCreate, PlatformConfigPostCreate, PostUpdate
-from typing import List, Optional
+from typing import List, Optional, Union
 from ..oauth2 import get_current_user
 from ..schemas import TokenData
 from ..utils import sum_of_platform_posts, sum_of_character_limit
@@ -9,6 +9,7 @@ from ..config import settings
 from ..database.db import get_db
 from ..database.models import Posts, UserPlatformConfig, Platform
 from sqlalchemy.orm import Session
+import json
 
 router = APIRouter(
     prefix="/posts",
@@ -40,7 +41,10 @@ def read_posts(skip: int = 0, limit: int = 50, text_id: Optional[int] = None, us
 
 
 @router.post("/", response_model=List[PostOut], status_code=status.HTTP_201_CREATED)
-def create_posts(text_id: int, platform_config : Optional[List[PlatformConfigPostCreate]] = None, user: TokenData = Depends(get_current_user), db: Session = Depends(get_db)):
+def create_posts(text_id: int, platform_config : Optional[Union[List[PlatformConfigPostCreate], str]] = None, user: TokenData = Depends(get_current_user), db: Session = Depends(get_db)):
+    if type(platform_config) == str:
+        platform_config = json.loads(platform_config)
+        platform_config = [PlatformConfigPostCreate(**config) for config in platform_config]
     if not platform_config:
         # Get user platform config with name from join platforms
         platform_config = db.query(

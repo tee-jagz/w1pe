@@ -12,6 +12,13 @@ router = APIRouter(
     tags=["Users"]
 )
 
+@router.get("/platformconfigs", response_model=List[PlatformConfigUser], status_code=status.HTTP_200_OK)
+def read_platformconfigs(current_user = Depends(get_current_user), db: Session = Depends(db.get_db)):
+    platforms_config = db.query(UserPlatformConfig).filter(UserPlatformConfig.user_id == current_user.id).all()
+    if not platforms_config:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No platforms found")
+    return platforms_config
+
 
 @router.get("/checkemail", response_model=UserEmail, status_code=status.HTTP_200_OK)
 def check_email(email: str = None, db: Session = Depends(db.get_db)):

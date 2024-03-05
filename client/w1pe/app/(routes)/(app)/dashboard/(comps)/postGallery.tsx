@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card';
 
 
+
 export default function PostGallery(props) {
     const posts = props.posts;
 
@@ -40,7 +41,7 @@ export default function PostGallery(props) {
                 <p className='w-full'>{`${posts.content.slice(0, 500)} ${posts.content.length > 240 ? "..." : ""}`}</p>
                 </CardContent>
                 <CardFooter>
-                <p className="color-red-300">
+                <p>
                     Not published
                 </p>
                 </CardFooter>
