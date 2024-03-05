@@ -12,8 +12,11 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[TextOut], status_code=status.HTTP_200_OK)
-def read_texts(skip: int = 0, limit: int = 10, owner_id: int = None, db: Session = Depends(get_db)):
-    texts = db.query(Text).offset(skip).limit(limit).all()
+def read_texts(skip: int = 0, limit: int = 10, user_id: int = None, db: Session = Depends(get_db)):
+    texts = db.query(Text)
+    if user_id:
+        texts = texts.filter(Text.user_id == user_id)
+    texts = texts.offset(skip).limit(limit).all()
     if not texts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No texts found")
     return texts
