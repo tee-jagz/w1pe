@@ -10,10 +10,10 @@ import {
   CardTitle
 } from '@/components/ui/card';
 
-import TextForm from './(comps)/textForm';
-import PostGallery from './(comps)/postGallery';
-import PlatformConfig from './(comps)/platformConfig';
-import { set } from 'zod';
+import TextForm from '../(comps)/textForm';
+import PostGallery from '../(comps)/postGallery';
+import PlatformConfig from '../(comps)/platformConfig';
+import TextGallery from '../(comps)/textGallery';
 
 
 
@@ -108,11 +108,16 @@ export default function Dashboard() {
   
 
   return (
-    <main className="flex min-h-screen max-w-[900px] w-full flex-col h-full pt-6 pr-4 pl-4 pb-5 items-center justify-between">
-      <div className='w-full h-1/8 bg-black flex flex-col justify-around'>
-        
-      </div>
-      <div className={`w-full  h-2/3 `}>
+    <main className="flex min-h-dvh max-w-[900px] w-full flex-col h-full pt-6 pr-4 pl-4 pb-5 items-center justify-between">
+      {/* <div className='w-full h-1/8 bg-black flex flex-col justify-around'>
+        <TextGallery
+        texts = {texts}
+        setDefaultTextValues = {setDefaultTextValues}
+        setTextId = {setTextId}
+        setPosts = {setPosts}
+        />
+      </div> */}
+      <div className={`transition-all w-full  h-${posts.length > 0 ? '1/3': '2/3'}`}>
         <Card className='h-full w-full pb-6'>
           <CardHeader>
           </CardHeader>

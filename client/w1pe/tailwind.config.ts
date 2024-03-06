@@ -18,6 +18,13 @@ const config = {
       },
     },
     extend: {
+      transitionDuration: {
+        '500': '500ms',
+      },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
