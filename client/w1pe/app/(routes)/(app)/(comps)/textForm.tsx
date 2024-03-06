@@ -19,11 +19,13 @@ import {
     FormLabel,
     FormMessage,
    } from '@/components/ui/form';
+import { get } from "http";
+import { toast } from "sonner";
 
 
 const formSchema = z.object({
-    title: z.string(),
-    content: z.string(),
+    title: z.string().nonempty(),
+    content: z.string().nonempty(),
   });
 
 export default function TextForm(props) {
@@ -33,6 +35,9 @@ export default function TextForm(props) {
     const setGenerating = props.setGenerating;
     const generating = props.generating;
     const defaultValues = props.defaultValues;
+    const savedText = props.savedText;
+    const setSavedText = props.setSavedText;
+    const text_id = props.text_id;
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -40,6 +45,10 @@ export default function TextForm(props) {
       });
 
       function postText(values) {
+        savedText 
+        ? 
+        getPosts(text_id)
+        :
         fetch('http://127.0.0.1:8000/texts', {
           method: 'POST',
           headers: {
@@ -49,20 +58,21 @@ export default function TextForm(props) {
           body: JSON.stringify(values)
         })
         .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          
+        .then(data => {          
           setTextId(data.id);
+          setSavedText(true);
           return data.id;
           
         }).then(id => {
           getPosts(id);
+          
         })
         .catch(error => {
+          toast.error('Error generating posts');
           console.log(error);
         });
     
-      }
+      };
 
       function onSubmit(values) {
         setGenerating(true);
@@ -85,9 +95,8 @@ export default function TextForm(props) {
               render={({ field }) => (
               <FormItem >
                   <FormControl>
-                  <Input  placeholder="Title"  {...field}   />
+                  <Input  placeholder="Title" variant="title" {...field} className="border-t-0 border-r-0 border-l-0 outline-none outline-gray-0"  />
                   </FormControl>
-                  <FormMessage/>
               </FormItem>
               )}
             />
@@ -97,14 +106,14 @@ export default function TextForm(props) {
               render={({ field }) => (
               <FormItem className="h-5/6">
                   <FormControl>
-                  <Textarea className='h-full' placeholder="Text" {...field}  />
+                  <Textarea className='h-full' variant='plain' placeholder="Enter text here..." {...field} className="border-0 outline-none outline-gray-0 resize-none h-full"  />
                   </FormControl>
-                  <FormMessage/>
               </FormItem>
               )}
             />
             <Button
               type="submit"
+              className="text-lg"
             >
               Generate {generating ? <SyncOutlined className='pl-2 pr-2' spin /> : null}
             </Button>

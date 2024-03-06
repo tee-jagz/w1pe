@@ -14,6 +14,7 @@ import TextForm from '../(comps)/textForm';
 import PostGallery from '../(comps)/postGallery';
 import PlatformConfig from '../(comps)/platformConfig';
 import TextGallery from '../(comps)/textGallery';
+import { toast } from 'sonner';
 
 
 
@@ -21,6 +22,7 @@ import TextGallery from '../(comps)/textGallery';
 export default function Dashboard() {
   const [generating, setGenerating] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [savedText, setSavedText] = useState(false);
   const [texts, setTexts] = useState([]);
   const [text_id, setTextId] = useState(0);
   const [platformConfigs, setPlatformConfigs] = useState([]);
@@ -97,6 +99,7 @@ export default function Dashboard() {
         console.log(data);
         setPosts(data);
         setGenerating(false);
+        toast.success('Posts generated');
       })
       .catch(error => {
         console.log(error);
@@ -117,8 +120,8 @@ export default function Dashboard() {
         setPosts = {setPosts}
         />
       </div> */}
-      <div className={`transition-all w-full  h-${posts.length > 0 ? '1/3': '2/3'}`}>
-        <Card className='h-full w-full pb-6'>
+      <div className={`transition-all w-full  h-2/3`}>
+        <Card className='h-full w-full pb-6 border-0 shadow-none'>
           <CardHeader>
           </CardHeader>
           <CardContent className='h-[90%]'>
@@ -128,6 +131,9 @@ export default function Dashboard() {
             setTextId = {setTextId}
             setGenerating = {setGenerating}
             generating = {generating}
+            savedText = {savedText}
+            setSavedText = {setSavedText}
+            text_id = {text_id}
             />
           </CardContent>
 

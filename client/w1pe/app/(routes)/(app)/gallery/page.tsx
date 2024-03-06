@@ -68,25 +68,25 @@ export default function CookieTest() {
     }
 
     return (
-        <div className="space-y-6 w-full  max-w-[900px]">
+        <div className="space-y-6 w-full p-10 max-w-[900px]">
             {
                 texts.map((text) => (
-                    <Card key={text.id} className="w-full border-0 shadow-none" >
+                    <Card key={text.id} className="w-full border-l-primary border-r-0 border-t-0 border-b-0 shadow-md hover:shadow-lg" >
                         <CardHeader>
                             <CardTitle>
                                 {text.title}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p>{text.content.slice(0,240) + '...'}</p>
+                            <p>{text.content.slice(0,500) + '...'}</p>
                         </CardContent>
                         <CardFooter className="w-full">
                             <ScrollArea className="w-full whitespace-nowrap rounded-md ">
-                                <div className="flex w-full space-x-4 p-0">
+                                <div className="flex w-full space-x-4 p-2">
                                     {
                                         posts.filter(item => item.text_id == text.id).map((post) => (
                                             post ?
-                                            <Card key={post.id} className="w-[25rem] h-[11rem] flex flex-col justify-around">
+                                            <Card key={post.id} className="w-[25rem] h-[11rem] flex flex-col justify-around border-0 shadow-none hover:shadow-md">
                                                 <CardHeader>
                                                     <CardTitle className='w-full flex flex-row justify-between items-center'>
                                                         {post.platform_id == 1 ? <XOutlined className="text-lg"/> : <Facebook className="size-6" />} 
