@@ -139,12 +139,13 @@ export default function CookieTest() {
                                     
                                     }
                                 </div>
-                                <ScrollBar orientation="horizontal" />
+                                <ScrollBar orientation="horizontal" colour="primary" className="h-1.5 opacity-20" />
                             </ScrollArea>                        
                         </CardFooter>
                     </Card>
                 ))
             }
+            <div className="h-10"></div>
         </div>
     )
 }
