@@ -6,14 +6,17 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 
-import { Facebook, CopyIcon } from "lucide-react";
+import { Facebook, CopyIcon, TrashIcon } from "lucide-react";
 import { XOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { get } from "http";
 
 
 let token;
 let decoded;
 
+// Get token from local storage
 function getToken() {
     if (typeof window !== 'undefined') {
     token = localStorage.getItem('access_token');
@@ -26,8 +29,11 @@ function getToken() {
 export default function CookieTest() {
     const [texts, setTexts] = useState([]);
     const [posts, setPosts] = useState([]);
+    const router = useRouter();
     const url = 'http://127.0.0.1:8000/';
 
+
+    // Get texts from the server
     function gettexts() {
         decoded = getToken();
         fetch(`${url}texts?user_id=${decoded.id}&limit=500`, {
@@ -44,6 +50,8 @@ export default function CookieTest() {
         .catch(error => console.log(error));
     }
 
+
+    // Get posts from the server
     function getPosts() {
         decoded = getToken();
         fetch(`${url}posts?user_id=${decoded.id}`, {
@@ -62,9 +70,34 @@ export default function CookieTest() {
         getPosts();
     }, []);
 
+
+    // Copy post to clipboard
     function copyPost(content) {
         navigator.clipboard.writeText(content);
         toast.success('Copied to clipboard');
+    }
+
+
+    // Delete text from the server
+    function deleteText(id) {
+        fetch(`${url}texts/${id}`, {
+            method: 'DELETE',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('access_token')}`
+            }
+        })
+        .then(response => {
+            response.status == 204 ?
+            gettexts() :
+            toast.error('Error deleting text');
+        })
+        .catch(error => console.log(error));
+    }
+
+
+    function handleDelete(id) {
+        deleteText(id);
+        
     }
 
     return (
@@ -72,10 +105,14 @@ export default function CookieTest() {
             {
                 texts.map((text) => (
                     <Card key={text.id} className="w-full border-l-primary border-r-0 border-t-0 border-b-0 shadow-md hover:shadow-lg" >
-                        <CardHeader>
-                            <CardTitle>
+                        <CardHeader className="flex flex-row justify-between w-full items-start">
+                            <CardTitle className="w-5/6">
                                 {text.title}
                             </CardTitle>
+                            <TrashIcon className="size-6 hover:text-primary hover:cursor-pointer" onClick={() => {
+                                handleDelete(text.id);
+                            }
+                            } />
                         </CardHeader>
                         <CardContent>
                             <p>{text.content.slice(0,500) + '...'}</p>

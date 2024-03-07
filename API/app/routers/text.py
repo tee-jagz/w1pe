@@ -56,8 +56,9 @@ def remove_text(id: int, owner: TokenData = Depends(get_current_user), db: Sessi
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"User not authorized to delete this text")
     
     text_query.delete(synchronize_session=False)
+    db.commit()
 
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    # return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.put("/", response_model=TextOut, status_code=status.HTTP_200_OK)
