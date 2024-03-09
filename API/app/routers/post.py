@@ -28,13 +28,15 @@ def read_post(id: int, config: Optional[bool] = False, db: Session = Depends(get
 
 
 @router.get("/", response_model=List[PostOut], status_code=status.HTTP_200_OK)
-def read_posts(skip: int = 0, limit: int = 50, text_id: Optional[int] = None, user_id: Optional[int] = None, db: Session = Depends(get_db)):
+def read_posts(skip: int = 0, limit: Optional[int] = None, text_id: Optional[int] = None, user_id: Optional[int] = None, db: Session = Depends(get_db)):
     query = db.query(Posts)
     if text_id:
         query = query.filter(Posts.text_id == text_id)
     if user_id:
         query = query.filter(Posts.user_id == user_id)
-    posts = query.offset(skip).limit(limit).all()
+    if limit:
+        query = query.limit(limit)
+    posts = query.offset(skip).all()
     if not posts:
         raise HTTPException(status_code=404, detail=f"No posts found")
     return posts

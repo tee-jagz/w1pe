@@ -4,13 +4,12 @@ import { useState, useEffect } from "react";
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 
-import { Facebook, CopyIcon, TrashIcon } from "lucide-react";
-import { XOutlined } from "@ant-design/icons";
+import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { get } from "http";
+
+import PostCard from "../(comps)/postCard";
 
 
 let token;
@@ -36,7 +35,7 @@ export default function CookieTest() {
     // Get texts from the server
     function gettexts() {
         decoded = getToken();
-        fetch(`${url}texts?user_id=${decoded.id}&limit=500`, {
+        fetch(`${url}texts?user_id=${decoded.id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -71,13 +70,6 @@ export default function CookieTest() {
     }, []);
 
 
-    // Copy post to clipboard
-    function copyPost(content) {
-        navigator.clipboard.writeText(content);
-        toast.success('Copied to clipboard');
-    }
-
-
     // Delete text from the server
     function deleteText(id) {
         fetch(`${url}texts/${id}`, {
@@ -87,11 +79,13 @@ export default function CookieTest() {
             }
         })
         .then(response => {
-            response.status == 204 ?
-            gettexts() :
-            toast.error('Error deleting text');
+            response.status == 204 && gettexts();
+            toast.success('Text deleted');
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error)
+            toast.error('Error deleting text');
+        });
     }
 
 
@@ -104,7 +98,7 @@ export default function CookieTest() {
         <div className="space-y-6 w-full p-10 max-w-[900px]">
             {
                 texts.map((text) => (
-                    <Card key={text.id} className="w-full border-l-primary border-r-0 border-t-0 border-b-0 shadow-md hover:shadow-lg" >
+                    <Card key={text.id} className="w-full hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[#ebe1e1] hover:shadow-lg hover:shadow-[#ebe1e1]" >
                         <CardHeader className="flex flex-row justify-between w-full items-start">
                             <CardTitle className="w-5/6">
                                 {text.title}
@@ -123,17 +117,10 @@ export default function CookieTest() {
                                     {
                                         posts.filter(item => item.text_id == text.id).map((post) => (
                                             post ?
-                                            <Card key={post.id} className="w-[25rem] h-[11rem] flex flex-col justify-around border-0 shadow-none hover:shadow-md">
-                                                <CardHeader>
-                                                    <CardTitle className='w-full flex flex-row justify-between items-center'>
-                                                        {post.platform_id == 1 ? <XOutlined className="text-lg"/> : <Facebook className="size-6" />} 
-                                                        <CopyIcon onClick={() => copyPost(post.content)} className="size-5 hover:text-primary hover:cursor-pointer"></CopyIcon>
-                                                    </CardTitle>
-                                                </CardHeader>
-                                                <CardContent>
-                                                    <p className="text-[0.65rem] whitespace-pre-wrap">{post.content.slice(0,240) + '...'}</p>
-                                                </CardContent>
-                                            </Card>
+                                            <PostCard
+                                            post={post}
+                                            getPosts={getPosts}
+                                            />
                                             : null
                                         ))
                                     
