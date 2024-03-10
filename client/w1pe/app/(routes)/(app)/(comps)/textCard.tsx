@@ -69,7 +69,7 @@ export default function TextCard(props) {
 
 
     return (
-        <Card key={text.id} className={`w-full hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}]`} >
+        <Card key={text.id} className={`w-full h-max hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}]`} >
             <CardHeader className="flex flex-row justify-between w-full items-start">
                 <CardTitle className="w-5/6">
                     {text.title}
@@ -92,9 +92,9 @@ export default function TextCard(props) {
             <CardContent>
                 <p>{text.content.slice(0,500) + '...'}</p>
             </CardContent>
-            <CardFooter className="w-full">
-                <ScrollArea className="w-full whitespace-nowrap rounded-md ">
-                    <div className="flex w-full space-x-4 p-2">
+            <CardFooter className="w-full h-max">
+                <ScrollArea className="w-full h-max whitespace-nowrap rounded-md ">
+                    <div className="flex w-full h-[12.5rem] space-x-4 p-2">
                         {
                             posts.filter(item => item.text_id == text.id).map((post) => (
                                 post ?

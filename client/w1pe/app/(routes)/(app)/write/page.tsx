@@ -182,8 +182,8 @@ export default function Write() {
             />
           </CardContent>
 
-          <CardFooter>
-            <h1 className='pr-2 font-bold'>Platform Configs: </h1>
+          <CardFooter className='w-full p-0'>
+            <h1 className='pr-3 text-lg font-semibold'>Platform Configs: </h1>
             {platformConfigs.map(
               (config) => (
                 config ?

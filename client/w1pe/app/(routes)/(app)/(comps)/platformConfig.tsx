@@ -97,7 +97,7 @@ export default function PlatformConfig(props) {
             <Popover>
                 <PopoverTrigger asChild>
                     {
-                        name == 'X' ? <XOutlined className='text-lg'/> : <Facebook className=' size-6'/>
+                        name == 'X' ? <XOutlined className='text-lg'/> : <Facebook className=' size-6 stroke-[1.5px]'/>
                     
                     }
                 </PopoverTrigger>

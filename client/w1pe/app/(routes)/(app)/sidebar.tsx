@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "next-themes";
 
-import { Sparkles, GalleryVertical, Settings2, MoonStar, Sun } from "lucide-react";
+import { Sparkles, GalleryVertical, Settings2, MoonStar, Sun, Wallet } from "lucide-react";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,8 @@ export default function Sidebar() {
                 <p className={subStyle}>WORKSPACE</p>
                 <Button className={buttonStyle} variant="link" onClick={() => router.push('/gallery')}> <GalleryVertical className={iconStyle} /> <p className={textStyle}>Gallery</p></Button>
                 <Button className={buttonStyle} variant="link" onClick={() => router.push('/write')}> <Sparkles className={iconStyle} /> <p className={textStyle}>Write</p></Button>
+                <p className={subStyle}>BILLING</p>
+                <Button className={buttonStyle} variant="link" > <Wallet className={iconStyle} /> <p className={textStyle}>Payment</p></Button>
                 <p className={subStyle}>HELP</p>
                 <Button className={buttonStyle} variant="link" > <Settings2 className={iconStyle} />  <p className={textStyle}>Settings</p></Button>
 
