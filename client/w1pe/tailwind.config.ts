@@ -26,6 +26,7 @@ const config = {
         'spacing': 'margin, padding',
       },
       colors: {
+        shadowcolor: "hsl(var(--shadowcolor))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

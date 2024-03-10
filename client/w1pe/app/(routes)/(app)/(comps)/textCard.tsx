@@ -1,6 +1,6 @@
 'use client';
-import { use, useEffect, useState } from 'react';
-import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { TrashIcon } from "lucide-react";
@@ -15,8 +15,10 @@ const url = 'http://127.0.0.1:8000/';
 
 export default function TextCard(props) {
     const [posts, setPosts] = useState([]);
+    const { theme } = useTheme();
     const text = props.text;
     const getTexts = props.getTexts;
+    const shadowColor = theme == "dark" ? "#0d0404" : "#ebe1e1";
     
     // Get posts from the server
     function getPosts() {
@@ -42,8 +44,12 @@ export default function TextCard(props) {
             }
         })
         .then(response => {
-            response.status == 204 && getTexts();
-            toast.success('Text deleted');
+            if(response.status == 204){
+                getTexts()
+                toast.success('Text deleted')
+            } else {
+                toast.error('Error deleting text');
+            }
         })
         .catch(error => {
             console.log(error)
@@ -62,7 +68,7 @@ export default function TextCard(props) {
 
 
     return (
-        <Card key={text.id} className="w-full hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[#ebe1e1] hover:shadow-lg hover:shadow-[#ebe1e1]" >
+        <Card key={text.id} className={`w-full hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}]`} >
             <CardHeader className="flex flex-row justify-between w-full items-start">
                 <CardTitle className="w-5/6">
                     {text.title}
