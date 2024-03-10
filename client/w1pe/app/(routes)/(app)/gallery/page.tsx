@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
-import { TrashIcon } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -42,7 +42,7 @@ export default function CookieTest() {
             }
         })
         .then(response => response.json())
-        .then(data => {setTexts(data.reverse())
+        .then(data => {setTexts(data)
         return data;
         }
         )
@@ -60,15 +60,21 @@ export default function CookieTest() {
 
     return (
         <div className="space-y-6 w-full p-10 max-w-[900px]">
-            {
+            {   
+            texts.length > 0 
+            ?
                 texts.map((text) => (
                     <TextCard
                         text={text}
                         getTexts={getTexts}
                     />
                 ))
+            :
+                null
             }
-            <div className="h-10"></div>
+            <div className="pt-16 pb-40 h-10 w-full flex flex-row justify-center">
+                <PlusCircle className="size-20 stroke-[1.5px] hover:text-primary hover:cursor-pointer" onClick={() => router.push('/write')} />
+            </div>
         </div>
     )
 }

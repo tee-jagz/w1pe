@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,9 +29,8 @@ const formSchema = z.object({
   });
 
 export default function TextForm(props) {
-    const getPosts = props.getPosts;
     const setTextId = props.setTextId;
-    const setPosts = props.setPosts;
+    const createPosts = props.createPosts;
     const setGenerating = props.setGenerating;
     const generating = props.generating;
     const defaultValues = props.defaultValues;
@@ -44,10 +43,21 @@ export default function TextForm(props) {
         defaultValues: defaultValues,
       });
 
+      const { setValue } = form;
+
+
+      useEffect(() => {
+        if (defaultValues) {
+            for (const key in defaultValues) {
+                setValue(key, defaultValues[key]);
+            }
+        }
+    }, [defaultValues, setValue]);
+
       function postText(values) {
         savedText 
         ? 
-        getPosts(text_id)
+        createPosts(text_id)
         :
         fetch('http://127.0.0.1:8000/texts', {
           method: 'POST',
@@ -64,8 +74,7 @@ export default function TextForm(props) {
           return data.id;
           
         }).then(id => {
-          getPosts(id);
-          
+          createPosts(id);
         })
         .catch(error => {
           toast.error('Error generating posts');

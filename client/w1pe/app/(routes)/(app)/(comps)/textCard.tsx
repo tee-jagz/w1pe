@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, SquarePen } from "lucide-react";
 import { toast } from "sonner";
 import { getToken } from "./utils";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import PostCard from "./postCard";
+import Link from 'next/link';
 
 let token;
 let decoded;
@@ -73,10 +74,20 @@ export default function TextCard(props) {
                 <CardTitle className="w-5/6">
                     {text.title}
                 </CardTitle>
-                <TrashIcon className="size-6 hover:text-primary hover:cursor-pointer" onClick={() => {
-                    handleDelete(text.id);
-                }
-                } />
+                <div className='flex flex-row space-x-4'>
+                    <Link href={`/write?text_id=${text.id}`} >
+                    <SquarePen
+                    className="size-6 hover:text-primary hover:cursor-pointer"
+                    />
+                    </Link>
+                    <TrashIcon 
+                    className="size-6 hover:text-primary hover:cursor-pointer" 
+                    onClick={() => {
+                        handleDelete(text.id);
+                    }
+                    } />
+                </div>
+                
             </CardHeader>
             <CardContent>
                 <p>{text.content.slice(0,500) + '...'}</p>

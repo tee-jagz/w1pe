@@ -1,6 +1,7 @@
 'use client';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
+import { useSearchParams } from 'next/navigation';
 
 import {
   Card,
@@ -15,11 +16,12 @@ import PostGallery from '../(comps)/postGallery';
 import PlatformConfig from '../(comps)/platformConfig';
 import TextGallery from '../(comps)/textGallery';
 import { toast } from 'sonner';
+import PostCard from '../(comps)/postCard';
 
 
 
 
-export default function Dashboard() {
+export default function Write() {
   const [generating, setGenerating] = useState(false);
   const [posts, setPosts] = useState([]);
   const [savedText, setSavedText] = useState(false);
@@ -27,17 +29,36 @@ export default function Dashboard() {
   const [text_id, setTextId] = useState(0);
   const [platformConfigs, setPlatformConfigs] = useState([]);
   const [usePlatformConfigs, setUsePlatformConfigs] = useState([]);
+  const searchParams = useSearchParams();
+  const textid = searchParams.get('text_id');
   const [defaultValues, setDefaultTextValues] = useState({
     title: "",
     content: "",
   });
   const url = 'http://127.0.0.1:8000/';
 
+ 
   
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     const decoded = jwtDecode(token);
-    console.log(decoded);
+    console.log(textid);
+
+    if (textid) {
+      setTextId(parseInt(textid));
+      setSavedText(true);
+      fetch(`${url}texts/${textid}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        setDefaultTextValues(data);
+      })
+      .catch(error => console.log(error));
+    }
 
     fetch(`${url}texts?user_id=${decoded.id}`, {
       method: 'GET',
@@ -56,7 +77,6 @@ export default function Dashboard() {
       }
     )
     .catch(error => console.log(error));
-
     
   }
   , []);
@@ -84,7 +104,7 @@ export default function Dashboard() {
   }
   
 
-  function getPosts(textid) {
+  function createPosts(textid) {
     fetch(`http://127.0.0.1:8000/posts?text_id=${textid}`, {
         method: 'POST',
         headers: {
@@ -107,27 +127,52 @@ export default function Dashboard() {
       });
   }
 
+
+  function getPosts(textid = text_id) {
+    fetch(`http://127.0.0.1:8000/posts?text_id=${textid}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      setPosts(data);
+    })
+    .catch(error => console.log(error));
+  }
+  
+
   
   
 
   return (
-    <main className="flex min-h-dvh max-w-[900px] w-full flex-col h-full pt-6 pr-4 pl-4 pb-5 items-center justify-between">
-      {/* <div className='w-full h-1/8 bg-black flex flex-col justify-around'>
-        <TextGallery
-        texts = {texts}
-        setDefaultTextValues = {setDefaultTextValues}
-        setTextId = {setTextId}
-        setPosts = {setPosts}
-        />
-      </div> */}
-      <div className={`transition-all w-full  h-2/3`}>
+    <main className="flex min-h-dvh max-w-[900px] min-w-[750px] bg-black-0 w-full flex-col p-10 items-center justify-between">
+      <div className={`w-full h-1/${posts.length > 0 ? "2": "4"}  flex flex-col justify-around space-y-6 pb-5`}>
+        {
+          posts.length > 0 ? 
+          posts.map(
+            (post) => (
+              post ? 
+              <PostCard
+              post={post}
+              getPosts={getPosts}
+              large={true}
+              />
+              : null
+            )
+          )
+          : null
+        }
+      </div>
+      <div className={`w-full h-2/3 sticky bottom-0`}>
         <Card className='h-full w-full pb-6 border-0 shadow-none'>
           <CardHeader>
           </CardHeader>
-          <CardContent className='h-[90%]'>
-            <TextForm 
-            setPosts = {setPosts}
-            getPosts = {getPosts}
+          <CardContent className='h-[90%] p-0'>
+            <TextForm
+            defaultValues = {defaultValues}
+            createPosts = {createPosts}
             setTextId = {setTextId}
             setGenerating = {setGenerating}
             generating = {generating}
@@ -154,11 +199,7 @@ export default function Dashboard() {
           </CardFooter>
         </Card>   
       </div>
-      <div className={`w-full h-1/${posts.length > 0 ? "2": "4"}  flex flex-col justify-around`}>
-        <PostGallery
-        posts = {posts}
-        />
-      </div>
+      
     </main>
   );
 }

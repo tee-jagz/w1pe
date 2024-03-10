@@ -63,7 +63,7 @@ export default function Login() {
         .then(data => {
             if (data.access_token){
             localStorage.setItem('access_token', data.access_token);
-            router.push('/dashboard');
+            router.push('/gallery');
         }   else {
             console.log(data)
         }
