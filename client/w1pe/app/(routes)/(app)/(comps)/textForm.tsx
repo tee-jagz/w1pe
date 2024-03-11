@@ -122,7 +122,8 @@ export default function TextForm(props) {
             />
             <Button
               type="submit"
-              className="text-lg"
+              className={`text-lg ${generating ? 'cursor-not-allowed' : 'cursor-pointer'}` }
+              disabled={generating}
             >
               Generate {generating ? <SyncOutlined className='pl-2 pr-2' spin /> : null}
             </Button>

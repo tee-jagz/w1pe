@@ -63,7 +63,7 @@ export default function CookieTest() {
             {   
             texts.length > 0 
             ?
-                texts.map((text) => (
+                texts.sort((a, b) => b.id - a.id).map((text) => (
                     <TextCard
                         text={text}
                         getTexts={getTexts}

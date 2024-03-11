@@ -47,6 +47,7 @@ export default function TextCard(props) {
         .then(response => {
             if(response.status == 204){
                 getTexts()
+                getPosts()
                 toast.success('Text deleted')
             } else {
                 toast.error('Error deleting text');
@@ -96,7 +97,7 @@ export default function TextCard(props) {
                 <ScrollArea className="w-full h-max whitespace-nowrap rounded-md ">
                     <div className="flex w-full h-[12.5rem] space-x-4 p-2">
                         {
-                            posts.filter(item => item.text_id == text.id).map((post) => (
+                            posts.filter(item => item.text_id == text.id).sort((a, b) => b.id - a.id).map((post) => (
                                 post ?
                                 <PostCard
                                 post={post}
