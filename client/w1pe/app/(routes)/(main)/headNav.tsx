@@ -36,8 +36,7 @@ export default function HeadNav(props) {
 
   function logout() {
     localStorage.removeItem('access_token');
-    router.push('/');
-    toast.success('Logged out');
+    router.push('/')
   }
 
 

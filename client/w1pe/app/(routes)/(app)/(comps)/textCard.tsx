@@ -8,14 +8,11 @@ import { toast } from "sonner";
 import { getToken } from "./utils";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-  } from "@/components/ui/dialog"
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+  } from "@/components/ui/collapsible"
+  
   
 import PostCard from "./postCard";
 import Link from 'next/link';
@@ -26,6 +23,7 @@ let decoded;
 const url = 'http://127.0.0.1:8000/';
 
 export default function TextCard(props) {
+    const [isExpanded, setIsExpanded] = useState(false);
     const [posts, setPosts] = useState([]);
     const { theme } = useTheme();
     const text = props.text;
@@ -81,7 +79,7 @@ export default function TextCard(props) {
 
 
     return (
-        <Card key={text.id} className={`w-full h-max hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}] duration-500 transition-all ease-in-out`} >
+        <Card key={text.id} className={`w-full ${isExpanded ? "h-max" : "h-min"} hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}] duration-500 transition-all ease-in-out`} >
             <CardHeader className="flex flex-row justify-between w-full items-start">
                 <CardTitle className="w-5/6">
                     {text.title}
@@ -102,7 +100,35 @@ export default function TextCard(props) {
                 
             </CardHeader>
             <CardContent>
-                <p>{text.content.slice(0,500) + '...'}</p>
+                <Collapsible
+                open={isExpanded}
+                onOpenChange={setIsExpanded}
+                >
+                <p className='text-justify pr-2 pl-2 duration-500 transition-height ease-in-out'>
+                    {
+                    text.content.length > 500 
+                    ? 
+                    (
+                    <span>
+                        <span>
+                            {text.content.slice(0,500)}
+                        </span> 
+                        <span className={`${isExpanded ? "" : "hidden"} duration-500 transition-all ease-in-out`}> 
+                            {text.content.slice(500)}
+                        </span>
+                        <span className={`${isExpanded ? "hidden" : ""} duration-500 transition-all ease-in-out`}> 
+                        ...
+                        </span>
+                    </span>)
+                    : 
+                    text.content
+                    }
+
+                </p>
+                <CollapsibleTrigger>
+                    <Button className='p-2' variant="link" >{isExpanded ? "Read Less" : "Read More"}</Button>
+                </CollapsibleTrigger>
+                </Collapsible>
             </CardContent>
             <CardFooter className="w-full h-max">
                 <ScrollArea className="w-full h-max whitespace-nowrap rounded-md ">

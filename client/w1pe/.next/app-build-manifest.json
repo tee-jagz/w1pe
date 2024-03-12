@@ -35,11 +35,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(routes)/(main)/login/page.js"
-    ],
-    "/(routes)/(main)/signup/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(routes)/(main)/signup/page.js"
     ]
   }
 }
