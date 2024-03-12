@@ -70,7 +70,7 @@ export default function TextCard(props) {
 
 
     return (
-        <Card key={text.id} className={`w-full h-max hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}]`} >
+        <Card key={text.id} className={`w-full h-max hover:border-l-primary border-r-0 border-t-0 border-b-0 shadow-md shadow-[${shadowColor}] hover:shadow-lg hover:shadow-[${shadowColor}] duration-500 transition-all ease-in-out`} >
             <CardHeader className="flex flex-row justify-between w-full items-start">
                 <CardTitle className="w-5/6">
                     {text.title}

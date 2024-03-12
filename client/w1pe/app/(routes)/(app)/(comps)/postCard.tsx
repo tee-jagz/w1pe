@@ -57,7 +57,7 @@ export default function PostCard(props: any) {
 
     return (
         !large ?
-        <Card key={post.id} className={`w-[25rem] h-[11rem] flex flex-col justify-around border-0 shadow-none hover:shadow-md ${shadowColor}`}>
+        <Card key={post.id} className={`w-[25rem] h-[11rem] flex flex-col justify-around border-0 shadow-none hover:shadow-md ${shadowColor} duration-500 transition-all ease-in-out`}>
             <CardHeader>
                 <CardTitle className='w-full flex flex-row justify-between items-center'>
                     {post.platform_id == 1 ? <XOutlined className="text-lg"/> : <Facebook className="size-6 stroke-[1.5px]" />} 

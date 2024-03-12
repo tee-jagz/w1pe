@@ -75,8 +75,13 @@ export default function Home() {
 
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/posts?limit=10").then((response) => response.json()).then((posts) => {
+    fetch("http://127.0.0.1:8000/posts?limit=10")
+    .then((response) => response.json())
+    .then((posts) => {
       setPosts(posts);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
     });
   }, []);
 

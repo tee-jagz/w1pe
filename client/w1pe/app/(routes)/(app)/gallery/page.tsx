@@ -73,7 +73,7 @@ export default function CookieTest() {
                 null
             }
             <div className="pt-16 pb-40 h-10 w-full flex flex-row justify-center">
-                <PlusCircle className="size-20 stroke-[1.5px] hover:text-primary hover:cursor-pointer" onClick={() => router.push('/write')} />
+                <PlusCircle className="animate-pulse size-20 stroke-[1.5px] hover:text-primary hover:cursor-pointer duration-[6000ms]" onClick={() => router.push('/write')} />
             </div>
         </div>
     )
