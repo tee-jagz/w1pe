@@ -7,8 +7,19 @@ import { TrashIcon, SquarePen } from "lucide-react";
 import { toast } from "sonner";
 import { getToken } from "./utils";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+  
 import PostCard from "./postCard";
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 let token;
 let decoded;
@@ -99,10 +110,10 @@ export default function TextCard(props) {
                         {
                             posts.filter(item => item.text_id == text.id).sort((a, b) => b.id - a.id).map((post) => (
                                 post ?
-                                <PostCard
-                                post={post}
-                                getPosts={getPosts}
-                                />
+                                        <PostCard
+                                        post={post}
+                                        getPosts={getPosts}
+                                        />
                                 : null
                             ))
                         

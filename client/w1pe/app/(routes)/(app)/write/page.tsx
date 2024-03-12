@@ -147,7 +147,7 @@ export default function Write() {
   
 
   return (
-    <main className="flex min-h-dvh max-w-[900px] min-w-[750px] bg-black-0 w-full flex-col p-10 items-center justify-between">
+    <main className="flex min-h-dvh max-w-[900px] min-w-[750px] w-full flex-col p-10 items-center justify-between  ">
       <div className={`w-full h-1/${posts.length > 0 ? "2": "4"}  flex flex-col justify-around space-y-6 pb-5`}>
         {
           posts.length > 0 ? 

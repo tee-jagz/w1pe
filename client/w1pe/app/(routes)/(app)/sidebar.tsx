@@ -4,10 +4,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "next-themes";
 
-import { Sparkles, GalleryVertical, Settings2, MoonStar, Sun, Wallet } from "lucide-react";
+import { Sparkles, GalleryVertical, Settings2, MoonStar, Sun, Wallet, MessageSquare, LogOut } from "lucide-react";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+  } from "@/components/ui/hover-card"
+  
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
@@ -27,21 +33,58 @@ export default function Sidebar() {
 
     return (
         // <aside className={`flex flex-col items-center justify-start ${open ? "w-1/6 min-w-48" : "w-[100px] min-w-32"}  max-w-64  h-max shadow-md ml-2 mt-20 shadow-[#b07474] bg-primary text-primary-foreground pt-5 pb-10`}>
-        <aside className={`flex flex-col items-center sticky top-10 justify-start ${open ? "w-1/6 min-w-48" : "w-[100px] min-w-32"} bg-accent max-w-64  h-max shadow-lg ml-2 mt-20 ${shadowColor} pt-5 pb-10 duration-1000 transition-all ease-in-out`}>
+        <aside className={`flex flex-col items-center z-1 sticky top-16 justify-start ${open ? "w-1/6 min-w-48" : "w-[100px] min-w-32"} bg-accent max-w-64  h-max shadow-lg ml-2 mt-20 ${shadowColor} pt-5 pb-10 duration-1000 transition-all ease-in-out`}>
             <div className="flex flex-col items-start w-full mb-10 pt-4 pl-5 pr-5">
-                <Link href='/' className={`text-xl mb-4 ${open ? "" : "self-center"} duration-1000 transition-all ease-in-out`}>{open ? "W1PE" : "W"}</Link>
                 <MenuOutlined onClick={()=> toggleSidebar()} className={`text-xl ${open ? "" : "self-center"} duration-1000 transition-all ease-in-out`} />
             </div>
             <nav className="flex flex-col items-start w-full">
                 <p className={subStyle}>WORKSPACE</p>
+                <HoverCard>
+                    <HoverCardTrigger asChild>
                 <Button className={buttonStyle} variant="link" onClick={() => router.push('/gallery')}> <GalleryVertical className={iconStyle} /> <p className={textStyle}>Gallery</p></Button>
-                <Button className={buttonStyle} variant="link" onClick={() => router.push('/write')}> <Sparkles className={iconStyle} /> <p className={textStyle}>Write</p></Button>
-                <p className={subStyle}>BILLING</p>
-                <Button className={buttonStyle} variant="link" > <Wallet className={iconStyle} /> <p className={textStyle}>Payment</p></Button>
-                <p className={subStyle}>HELP</p>
-                <Button className={buttonStyle} variant="link" > <Settings2 className={iconStyle} />  <p className={textStyle}>Settings</p></Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent side='right' className="w-max h-max">
+                        <p>Gallery</p>
+                    </HoverCardContent>
+                </HoverCard>
+                <HoverCard>
+                    <HoverCardTrigger asChild>
+                        <Button className={buttonStyle} variant="link" onClick={() => router.push('/write')}> <Sparkles className={iconStyle} /> <p className={textStyle}>Write</p></Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent side='right' className="w-max h-max">
+                        <p>Write</p>
+                    </HoverCardContent>
+                </HoverCard>
+                <HoverCard>
+                    <HoverCardTrigger asChild>
+                        <Button className={buttonStyle} variant="link" onClick={() => router.push('/posts')}> <MessageSquare className={iconStyle} /> <p className={textStyle}>Posts</p></Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent side='right' className="w-max h-max">
+                        <p>Posts</p>
+                    </HoverCardContent>
+                </HoverCard>
 
+                <p className={subStyle}>BILLING</p>
+                <HoverCard>
+                    <HoverCardTrigger asChild>
+                        <Button className={buttonStyle} variant="link" > <Wallet className={iconStyle} /> <p className={textStyle}>Payment</p></Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent side='right' className="w-max h-max">
+                        <p>Payment</p>
+                    </HoverCardContent>
+                </HoverCard>
+                <p className={subStyle}>HELP</p>
+                <HoverCard>
+                    <HoverCardTrigger asChild>
+                        <Button className={buttonStyle} variant="link" > <Settings2 className={iconStyle} />  <p className={textStyle}>Settings</p></Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent side='right' className="w-max h-max">
+                        <p>Settings</p>
+                    </HoverCardContent>
+                </HoverCard>
             </nav>
+
+            
 
             <div className={`flex flex-row  ${open ? "items-start pl-5" : "justify-center"} w-full mt-10`}>
                 {theme == "dark" ? <Sun className={iconStyle} onClick={() => setTheme("light")} /> : <MoonStar className={iconStyle} onClick={() => setTheme("dark")} />}

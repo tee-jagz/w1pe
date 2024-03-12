@@ -1,9 +1,19 @@
 'use client';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { CopyIcon, TrashIcon, Facebook, Send } from "lucide-react";
+import { CopyIcon, TrashIcon, Facebook, Send, Eye } from "lucide-react";
 import { XOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+  
+
 
 import { useTheme } from 'next-themes';
 
@@ -62,6 +72,21 @@ export default function PostCard(props: any) {
                 <CardTitle className='w-full flex flex-row justify-between items-center'>
                     {post.platform_id == 1 ? <XOutlined className="text-lg"/> : <Facebook className="size-6 stroke-[1.5px]" />} 
                     <div className='flex flex-row space-x-3'>
+                        { post.content.length > 240
+                        ?
+                        <Dialog>
+                            <DialogTrigger>
+                                <Eye className="size-5 hover:text-primary hover:cursor-pointer" />
+                            </DialogTrigger>
+                        <DialogContent className='backdrop-blur-sm backdrop:bg-white backdrop-opacity-65 border-0 shadow-lg backdrop-hue-rotate-30'>
+                                <DialogDescription className='p-6'>
+                                    {post.content}
+                                </DialogDescription>
+                            </DialogContent>
+                        </Dialog>
+                        : null
+                        }
+
                         <CopyIcon onClick={() => copyPost(post.content)} className="size-5 hover:text-primary hover:cursor-pointer"></CopyIcon>
                         {
                         post.platform_id == 1 
@@ -78,14 +103,14 @@ export default function PostCard(props: any) {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <p className="text-[0.65rem] whitespace-pre-wrap">{post.content.slice(0,240) + '...'}</p>
+                <p className="text-[0.65rem] whitespace-pre-wrap">{post.content.length <= 240 ? post.content : (post.content.slice(0,240) + ' ...')}</p>
             </CardContent>
             <CardFooter className="flex flex-row justify-end">
                 <TrashIcon onClick={() => deletePost(post.id)} className="size-5 hover:cursor-pointer hover:stroke-slate-500"></TrashIcon>
             </CardFooter>
         </Card>
         :
-        <Card key={post.id} className={`w-full h-max flex flex-col justify-around border-0 shadow-sm shadow-shadowcolor hover:shadow-md ${shadowColor}`}>
+        <Card key={post.id} className={`w-full h-max flex flex-col justify-around border-0 shadow-sm shadow-shadowcolor hover:shadow-md ${shadowColor} duration-500 transition-all ease-in-out`}>
             <CardHeader>
                 <CardTitle className='w-full flex flex-row justify-between items-center'>
                     {post.platform_id == 1 ? <XOutlined className="text-xl"/> : <Facebook className="size-7 stroke-[1.5px]" />} 

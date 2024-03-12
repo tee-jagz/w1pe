@@ -6,10 +6,21 @@ function getToken() {
     let token;
     if (typeof window !== 'undefined') {
     token = localStorage.getItem('access_token');
-    decoded = jwtDecode(token);
+    decoded = token ? jwtDecode(token) : null;
     }
     return decoded;
 }
 
 
-export { getToken };
+function getUser() {
+    let decoded;
+    let token;
+    if (typeof window !== 'undefined') {
+    token = localStorage.getItem('access_token');
+    decoded = token ? jwtDecode(token) : null;
+    }
+    return decoded;
+}
+
+
+export { getToken, getUser };
